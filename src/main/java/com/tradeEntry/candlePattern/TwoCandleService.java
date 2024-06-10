@@ -1,6 +1,6 @@
-package com.tradeentry.candlePattern;
+package com.tradeEntry.candlePattern;
 
-import com.tradeentry.data.Candle;
+import com.tradeEntry.data.Candle;
 import org.springframework.stereotype.Service;
 
 @Service

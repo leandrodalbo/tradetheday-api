@@ -1,4 +1,4 @@
-package com.tradeentry.data;
+package com.tradeEntry.data;
 
 public record Candle(
         Float open,
