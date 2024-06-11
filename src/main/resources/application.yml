@@ -1,8 +1,18 @@
 spring:
   application:
     name: trade-signal
+  sql:
+    init:
+      mode: always
+  datasource:
+    username: user
+    password: password
+    url: jdbc:postgresql://localhost:5432/opentrades
+    driverClassName: org.postgresql.Driver
 project:
   binance-uri: https://api.binance.com
+  profit: 1.02
+  stop: 0.98
   symbols:
     - BTCUSDT
     - SOLUSDT
@@ -31,3 +41,9 @@ project:
     - CHZUSDT
     - BATUSDT
     - MANAUSDT
+kraken:
+  api-uri: https://api.kraken.com
+  api-key: apikey
+  api-secret: apisecret
+  profit: 1.05
+  stop: 0.96
