@@ -5,3 +5,29 @@ project:
   binance-uri: https://api.binance.com
   symbols:
     - BTCUSDT
+    - SOLUSDT
+    - MATICUSDT
+    - HBARUSDT
+    - FTMUSDT
+    - SKLUSDT
+    - DOTUSDT
+    - GRTUSDT
+    - BCHUSDT
+    - FETUSDT
+    - AXSUSDT
+    - MKRUSDT
+    - SLPUSDT
+    - AAVEUSDT
+    - LTCUSDT
+    - LINKUSDT
+    - AVAXUSDT
+    - XRPUSDT
+    - ZRXUSDT
+    - AUDIOUSDT
+    - XLMUSDT
+    - ADAUSDT
+    - SANDUSDT
+    - COMPUSDT
+    - CHZUSDT
+    - BATUSDT
+    - MANAUSDT
