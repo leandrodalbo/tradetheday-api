@@ -1,6 +1,6 @@
 package com.open.trade.controller;
 
-import com.open.trade.configuration.ProjectProps;
+import com.open.trade.configuration.ProjectSymbols;
 import com.open.trade.dto.EngulfingDto;
 import com.open.trade.entries.BullishEngulfingCandleService;
 import org.junit.jupiter.api.Test;
@@ -30,11 +30,11 @@ public class EngulfingCandlesControllerTest {
     MockMvc mvc;
 
     @MockBean
-    private ProjectProps projectProps;
+    private ProjectSymbols projectSymbols;
 
     @Test
     void shouldGetSymbolsWithEngulfingResults() throws Exception {
-        given(service.engulfingCandles(projectProps.symbols(), "1h")).willReturn(List.of(new EngulfingDto("BTCUSDT", true)));
+        given(service.engulfingCandles(projectSymbols.symbols(), "1h")).willReturn(List.of(new EngulfingDto("BTCUSDT", true)));
 
 
         MockHttpServletResponse res = mvc.perform(get("/crypto/engulfing/1h")
@@ -43,7 +43,7 @@ public class EngulfingCandlesControllerTest {
 
         then(res.getStatus()).isEqualTo(HttpStatus.OK.value());
         verify(service, times(1))
-                .engulfingCandles(projectProps.symbols(), "1h");
+                .engulfingCandles(projectSymbols.symbols(), "1h");
     }
 
 }

@@ -1,8 +1,8 @@
 package com.open.trade.controller;
 
-import com.open.trade.entries.BullishEngulfingCandleService;
-import com.open.trade.configuration.ProjectProps;
+import com.open.trade.configuration.ProjectSymbols;
 import com.open.trade.dto.EngulfingDto;
+import com.open.trade.entries.BullishEngulfingCandleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,17 +15,17 @@ import java.util.List;
 public class EngulfingCandlesController {
 
 
-    private final ProjectProps projectProps;
+    private final ProjectSymbols projectSymbols;
     private final BullishEngulfingCandleService service;
 
-    public EngulfingCandlesController(ProjectProps projectProps, BullishEngulfingCandleService service) {
-        this.projectProps = projectProps;
+    public EngulfingCandlesController(ProjectSymbols projectSymbols, BullishEngulfingCandleService service) {
+        this.projectSymbols = projectSymbols;
         this.service = service;
     }
 
     @GetMapping("/engulfing/{timeFrame}")
     public List<EngulfingDto> findByTimeFrame(@PathVariable String timeFrame) {
-        return service.engulfingCandles(this.projectProps.symbols(), timeFrame);
+        return service.engulfingCandles(this.projectSymbols.symbols(), timeFrame);
     }
 
 }
