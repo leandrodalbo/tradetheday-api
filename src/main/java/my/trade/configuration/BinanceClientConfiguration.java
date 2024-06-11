@@ -1,4 +1,4 @@
-package com.tradeEntry.configuration;
+package my.trade.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

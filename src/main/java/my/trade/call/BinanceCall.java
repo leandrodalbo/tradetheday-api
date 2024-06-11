@@ -1,10 +1,9 @@
-package com.tradeEntry.call;
+package my.trade.call;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class BinanceCall {
         this.webClient = webClient;
     }
 
-    public Mono<List> fetchCandles(String symbol, String interval, Integer limit) {
+    public List fetchCandles(String symbol, String interval, Integer limit) {
 
         return webClient.get()
                 .uri(
@@ -28,9 +27,8 @@ public class BinanceCall {
                                 .build())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
-                .bodyToMono(List.class);
+                .bodyToMono(List.class)
+                .block();
 
     }
-
-
 }

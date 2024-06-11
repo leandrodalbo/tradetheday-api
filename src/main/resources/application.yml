@@ -3,3 +3,5 @@ spring:
     name: trade-signal
 project:
   binance-uri: https://api.binance.com
+  symbols:
+    - BTCUSDT

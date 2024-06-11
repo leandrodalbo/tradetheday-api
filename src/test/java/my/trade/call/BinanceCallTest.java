@@ -1,4 +1,4 @@
-package com.tradeEntry.call;
+package my.trade.call;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BinanceCallTest {
 
@@ -40,7 +40,7 @@ public class BinanceCallTest {
     }
 
     @Test
-    void shouldFetchTwoCandles() throws JsonProcessingException {
+    void shouldFetchCandles() throws JsonProcessingException {
         var mockResponse = new MockResponse()
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .setBody(mapper.writeValueAsString(List.of(List.of(
@@ -56,16 +56,13 @@ public class BinanceCallTest {
                         "119",
                         "1.23424865",
                         "0"
-
                 ))));
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<List> candles = binanceCall.fetchCandles("BTCUSD", "1H", 2);
+        List candles = binanceCall.fetchCandles("BTCUSD", "1H", 2);
 
-        StepVerifier.create(candles)
-                .expectNextMatches(it -> it.size() > 0)
-                .verifyComplete();
+        assertThat(candles).isNotEmpty();
     }
 
 }
