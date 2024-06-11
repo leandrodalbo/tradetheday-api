@@ -1,8 +1,8 @@
 package com.open.trade.call;
 
-import com.open.trade.configuration.ProjectProps;
+import com.open.trade.configuration.BinanceProps;
 import com.open.trade.data.Candle;
-import com.open.trade.model.TradeOneHour;
+import com.open.trade.model.Onehour;
 import com.open.trade.repository.OneHourRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,19 +17,23 @@ public class BinanceCall extends ExchangeCall {
     private static final String KLINES = "/api/v3/klines";
 
     private final int CANDLES_LIMIT = 2;
-    private final ProjectProps props;
+    private final BinanceProps props;
+
+    private final WebClient client;
+
 
     private OneHourRepository repository;
 
-    public BinanceCall(WebClient binanceClient, ProjectProps props) {
-        super(binanceClient);
+    public BinanceCall(WebClient.Builder builder, BinanceProps props) {
         this.props = props;
+        this.client =  builder.baseUrl(props.binanceUri()).build();
     }
 
     @Override
-    public void searchEngulfingEntries(String symbol, String interval) {
-        List candles = this.fetchData(symbol, interval, CANDLES_LIMIT);
-        saveInfo(symbol, candles);
+    public void searchEngulfingEntries(String interval) {
+        this.props.symbols().forEach(symbol -> {
+            saveInfo(symbol, this.fetchData(symbol, interval, CANDLES_LIMIT));
+        });
     }
 
     private List fetchData(String symbol, String interval, Integer limit) {
@@ -52,10 +56,10 @@ public class BinanceCall extends ExchangeCall {
 
         if (isEngulfing(c0, c1)) {
 
-            Optional<TradeOneHour> found = repository.findById(symbol);
+            Optional<Onehour> found = repository.findById(symbol);
 
             if (found.isEmpty()) {
-                repository.save(new TradeOneHour(
+                repository.save(new Onehour(
                         symbol,
                         true,
                         c1.close(),
@@ -68,8 +72,8 @@ public class BinanceCall extends ExchangeCall {
                         null
                 ));
             } else {
-                TradeOneHour info = found.get();
-                repository.save(new TradeOneHour(
+                Onehour info = found.get();
+                repository.save(new Onehour(
                         info.symbol(),
                         true,
                         c1.close(),

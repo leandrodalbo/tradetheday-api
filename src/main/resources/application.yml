@@ -9,7 +9,7 @@ spring:
     password: password
     url: jdbc:postgresql://localhost:5432/opentrades
     driverClassName: org.postgresql.Driver
-project:
+binance:
   binance-uri: https://api.binance.com
   profit: 1.02
   stop: 0.98
@@ -43,7 +43,10 @@ project:
     - MANAUSDT
 kraken:
   api-uri: https://api.kraken.com
-  api-key: apikey
-  api-secret: apisecret
+  api-key:
+  api-secret:
   profit: 1.05
   stop: 0.96
+  mac-algorithm: HmacSHA512
+  symbols:
+    - SOLUSDT

@@ -1,6 +1,5 @@
 package com.open.trade.controller;
 
-import com.open.trade.configuration.ProjectSymbols;
 import com.open.trade.service.SearchEntriesService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,11 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchEntriesController {
 
 
-    private final ProjectSymbols projectSymbols;
     private final SearchEntriesService service;
 
-    public SearchEntriesController(ProjectSymbols projectSymbols, SearchEntriesService service) {
-        this.projectSymbols = projectSymbols;
+    public SearchEntriesController(SearchEntriesService service) {
+
         this.service = service;
     }
 
