@@ -5,17 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("crypto")
+@RequestMapping()
 public class SearchEntriesController {
-
-
-    private final SearchEntries service;
-
-    public SearchEntriesController(SearchEntries service) {
-
-        this.service = service;
-    }
-
 //    @GetMapping("/engulfing/{timeFrame}")
 //    public List<EngulfingDto> findByTimeFrame(@PathVariable String timeFrame) {
 //        return service.engulfingCandles(this.projectSymbols.symbols(), timeFrame);
