@@ -1,7 +1,6 @@
-package com.open.trade.call;
+package com.open.trade.exchangecall;
 
 import com.open.trade.data.Candle;
-import com.open.trade.repository.OpportunityRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -9,18 +8,9 @@ import java.util.List;
 public abstract class ExchangeCall {
 
     protected final WebClient client;
-    protected final OpportunityRepository repository;
 
-    protected ExchangeCall(WebClient client, OpportunityRepository repository) {
+    protected ExchangeCall(WebClient client) {
         this.client = client;
-        this.repository = repository;
-    }
-
-
-    protected static Boolean isEngulfing(Candle[] candles) {
-        Candle prev = candles[0];
-        Candle current = candles[1];
-        return ((prev.open() > prev.close()) && (current.open() <= prev.close()) && current.close() >= prev.open());
     }
 
     protected static Candle[] candles(List values) {
@@ -43,9 +33,4 @@ public abstract class ExchangeCall {
 
         return result;
     }
-
-
-    protected abstract void searchEngulfingEntries(String interval);
-
-    protected abstract void saveInfo(String symbol, List values, String timeframe);
 }

@@ -1,4 +1,4 @@
-package com.open.trade.call.exchange;
+package com.open.trade.exchangecall.exchange;
 
 public record KrakenResponse(
         String[] error,

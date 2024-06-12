@@ -1,6 +1,6 @@
 package com.open.trade.controller;
 
-import com.open.trade.service.SearchEntriesService;
+import com.open.trade.service.SearchEntries;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchEntriesController {
 
 
-    private final SearchEntriesService service;
+    private final SearchEntries service;
 
-    public SearchEntriesController(SearchEntriesService service) {
+    public SearchEntriesController(SearchEntries service) {
 
         this.service = service;
     }
