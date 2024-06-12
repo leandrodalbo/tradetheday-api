@@ -1,7 +1,7 @@
 package com.open.trade;
 
-import com.open.trade.exchangecall.BinanceCall;
-import com.open.trade.exchangecall.KrakenCall;
+import com.open.trade.service.EngulfingBinanceSearch;
+import com.open.trade.service.EngulfingKrakenSearch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,14 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TradeSignalApplicationTests {
 
     @Autowired
-    BinanceCall binanceCall;
+    EngulfingKrakenSearch ks;
 
     @Autowired
-    KrakenCall krakenCall;
+    EngulfingBinanceSearch bs;
 
     @Test
     void contextLoads() {
-        System.out.println("ddd");
+        bs.searchEntries("1d");
+        ks.searchEntries("240");
     }
 
 }

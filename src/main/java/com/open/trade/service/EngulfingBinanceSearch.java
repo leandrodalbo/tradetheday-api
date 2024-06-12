@@ -6,7 +6,9 @@ import com.open.trade.exchangecall.BinanceCall;
 import com.open.trade.model.Opportunity;
 import com.open.trade.repository.OpportunityRepository;
 import com.open.trade.strategy.EngulfingCandleStrategy;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EngulfingBinanceSearch implements SearchEntries {
     public final int TOTAL_CANDLES = 2;
     private final OpportunityRepository repository;

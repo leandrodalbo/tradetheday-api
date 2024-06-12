@@ -1,14 +1,13 @@
 spring:
   application:
     name: trade-signal
-  sql:
-    init:
-      mode: always
+  liquibase:
+    enabled: true
   datasource:
     username: user
     password: password
     url: jdbc:postgresql://localhost:5432/opentrades
-    driverClassName: org.postgresql.Driver
+
 binance:
   binance-uri: https://api.binance.com
   profit: 1.02
@@ -50,3 +49,5 @@ kraken:
   mac-algorithm: HmacSHA512
   symbols:
     - SOLUSDT
+    - MATICUSD
+    - CHZUSD

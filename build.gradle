@@ -20,18 +20,21 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.liquibase:liquibase-core:4.26.0'
 
     runtimeOnly 'org.postgresql:postgresql'
+
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'com.squareup.okhttp3:mockwebserver'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-    testImplementation 'org.testcontainers:postgresql:1.19.8'
-    testImplementation("org.testcontainers:junit-jupiter:1.19.8")
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation("org.testcontainers:junit-jupiter")
 }
 
 tasks.named('test') {

@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/changes/V1__addOpportunitiesTable.sql

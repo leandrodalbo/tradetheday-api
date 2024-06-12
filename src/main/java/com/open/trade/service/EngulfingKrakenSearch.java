@@ -6,10 +6,12 @@ import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.model.Opportunity;
 import com.open.trade.repository.OpportunityRepository;
 import com.open.trade.strategy.EngulfingCandleStrategy;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+@Service
 public class EngulfingKrakenSearch implements SearchEntries {
     private final OpportunityRepository repository;
     private final EngulfingCandleStrategy strategy;

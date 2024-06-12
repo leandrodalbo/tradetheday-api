@@ -29,7 +29,6 @@ public record Opportunity(
 
         Float krakenstop,
 
-
         Float krakenprofit,
 
         @Version
