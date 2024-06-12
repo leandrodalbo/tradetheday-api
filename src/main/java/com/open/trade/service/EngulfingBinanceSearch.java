@@ -24,7 +24,7 @@ public class EngulfingBinanceSearch implements SearchEntries {
     @Override
     public void searchEntries(String interval) {
         this.props.symbols().forEach(symbol -> {
-            saveInfo(symbol, binanceCall.fetchData(symbol, interval, TOTAL_CANDLES), interval);
+            saveInfo(symbol, binanceCall.engulfingCandles(symbol, interval, TOTAL_CANDLES), interval);
         });
     }
 

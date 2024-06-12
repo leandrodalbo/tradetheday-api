@@ -26,7 +26,7 @@ public class EngulfingKrakenSearch implements SearchEntries {
     @Override
     public void searchEntries(String interval) {
         this.props.symbols().forEach(symbol -> {
-            saveInfo(symbol, krakenCall.fetchData(symbol, Integer.parseInt(interval), sinceParameter(interval)), interval);
+            saveInfo(symbol, krakenCall.engulfingCandles(symbol, Integer.parseInt(interval), sinceParameter(interval)), interval);
         });
     }
 

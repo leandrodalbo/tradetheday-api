@@ -17,7 +17,7 @@ public class KrakenCall extends ExchangeCall {
         super(builder.baseUrl(props.apiUri()).build());
     }
 
-    public Candle[] fetchData(String symbol, Integer interval, long since) {
+    public Candle[] engulfingCandles(String symbol, Integer interval, long since) {
         KrakenResponse response = client.get()
                 .uri(
                         builder -> builder.path(ON_PATH)
@@ -31,6 +31,6 @@ public class KrakenCall extends ExchangeCall {
                 .block();
 
         Map data = (Map) response.result();
-        return candles((List) data.get(symbol));
+        return engulfingToArray((List) data.get(symbol));
     }
 }

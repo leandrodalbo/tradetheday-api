@@ -13,7 +13,7 @@ public abstract class ExchangeCall {
         this.client = client;
     }
 
-    protected static Candle[] candles(List values) {
+    protected static Candle[] engulfingToArray(List values) {
         Candle[] result = new Candle[2];
 
         List valuesC0 = (List) values.get(0);

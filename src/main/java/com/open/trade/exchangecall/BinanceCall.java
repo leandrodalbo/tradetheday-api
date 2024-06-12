@@ -18,8 +18,8 @@ public class BinanceCall extends ExchangeCall {
         super(builder.baseUrl(props.binanceUri()).build());
     }
 
-    public Candle[] fetchData(String symbol, String interval, Integer limit) {
-        return candles(Objects.requireNonNull(client.get()
+    public Candle[] engulfingCandles(String symbol, String interval, Integer limit) {
+        return engulfingToArray(Objects.requireNonNull(client.get()
                 .uri(
                         builder -> builder.path(KLINES)
                                 .queryParam("symbol", symbol)
