@@ -1,14 +1,13 @@
-package com.open.trade.service.strategy;
+package com.open.trade.strategy;
 
 import com.open.trade.data.Candle;
-import com.open.trade.strategy.EngulfingCandleStrategy;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EngulfingCandleServiceTest {
+public class EngulfingCandleStrategyTest {
 
-    EngulfingCandleStrategy service = new EngulfingCandleStrategy();
+    EngulfingCandleStrategy strategy = new EngulfingCandleStrategy();
 
     @Test
     void shouldFindAnEngulfingPattern() {
@@ -16,7 +15,7 @@ public class EngulfingCandleServiceTest {
                 Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
                 Candle.of(0.9f, 5.0f, 4.5f, 2.5f)
         };
-        assertThat(service.isEngulfing(candles)).isTrue();
+        assertThat(strategy.isEngulfing(candles)).isTrue();
     }
 
 
@@ -26,7 +25,7 @@ public class EngulfingCandleServiceTest {
                 Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
                 Candle.of(0.9f, 5.0f, 4.5f, 1.4f)
         };
-        assertThat(service.isEngulfing(candles)).isFalse();
+        assertThat(strategy.isEngulfing(candles)).isFalse();
     }
 
     @Test
@@ -35,7 +34,7 @@ public class EngulfingCandleServiceTest {
                 Candle.of(1.5f, 2.8f, 1.5f, 1.6f),
                 Candle.of(0.9f, 5.0f, 4.5f, 1.4f)
         };
-        assertThat(service.isEngulfing(candles)).isFalse();
+        assertThat(strategy.isEngulfing(candles)).isFalse();
     }
 
     @Test
@@ -44,7 +43,7 @@ public class EngulfingCandleServiceTest {
                 Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
                 Candle.of(1.5f, 5.0f, 4.5f, 2.5f)
         };
-        assertThat(service.isEngulfing(candles)).isFalse();
+        assertThat(strategy.isEngulfing(candles)).isFalse();
     }
 
 

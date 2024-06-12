@@ -1,9 +1,9 @@
 package com.open.trade.service;
 
 
-import com.open.trade.configuration.BinanceProps;
+import com.open.trade.configuration.KrakenProps;
 import com.open.trade.data.Candle;
-import com.open.trade.exchangecall.BinanceCall;
+import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.model.Opportunity;
 import com.open.trade.repository.OpportunityRepository;
 import com.open.trade.strategy.EngulfingCandleStrategy;
@@ -26,24 +26,24 @@ public class EngulfingKrakenSearchTest {
     OpportunityRepository repository;
 
     @Mock
-    BinanceCall binanceCall;
+    KrakenCall krakenCall;
 
     @Mock
     EngulfingCandleStrategy strategy;
 
     @Mock
-    BinanceProps props;
+    KrakenProps props;
 
 
     @InjectMocks
-    EngulfingBinanceSearch search;
+    EngulfingKrakenSearch search;
 
 
     @Test
-    void shouldSearchBinanceOpportunitiesAndSaveThem() {
+    void shouldSearchKrakenOpportunitiesAndSaveThem() {
         when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
         when(repository.save(any())).thenReturn(mock(Opportunity.class));
-        when(binanceCall.engulfingCandles(any(), anyString(), anyInt())).thenReturn(
+        when(krakenCall.engulfingCandles(any(), anyInt(), anyLong())).thenReturn(
                 new Candle[]{
                         Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
                         Candle.of(0.9f, 5.0f, 4.5f, 2.5f)
@@ -52,11 +52,11 @@ public class EngulfingKrakenSearchTest {
 
         when(strategy.isEngulfing(any())).thenReturn(true);
 
-        search.searchEntries("1h");
+        search.searchEntries("60");
 
         verify(props, times(1)).symbols();
         verify(repository, times(1)).save(any());
-        verify(binanceCall, times(1)).engulfingCandles(any(), anyString(), anyInt());
+        verify(krakenCall, times(1)).engulfingCandles(any(), anyInt(), anyLong());
 
     }
 }
