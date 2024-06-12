@@ -17,6 +17,7 @@ class TradeSignalApplicationTests {
 
     @Test
     void contextLoads() {
+
         krakenCall.searchEngulfingEntries("60");
         binanceCall.searchEngulfingEntries("1h");
 

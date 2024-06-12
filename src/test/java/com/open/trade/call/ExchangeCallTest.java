@@ -10,42 +10,40 @@ public class ExchangeCallTest {
 
     @Test
     void shouldFindAnEngulfingPattern() {
-        Candle c1 = Candle.of(1.5f, 1.8f, 0.5f, 1.0f);
-        Candle c2 = Candle.of(0.9f, 5.0f, 4.5f, 2.5f);
-
-        assertThat(ExchangeCall.isEngulfing(c1, c2)).isTrue();
-    }
-
-    @Test
-    void shouldBeFalseWhenTheSecondCandleIsBearish() {
-        Candle c1 = Candle.of(1.5f, 1.8f, 0.5f, 1.0f);
-        Candle c2 = Candle.of(0.9f, 1.0f, 0.5f, 0.6f);
-
-        assertThat(ExchangeCall.isEngulfing(c1, c2)).isFalse();
-    }
-
-    @Test
-    void shouldBeFalseWhenTheFirstCandleCandleIsBullish() {
-        Candle c1 = Candle.of(1.5f, 2.5f, 1.0f, 2f);
-        Candle c2 = Candle.of(0.9f, 1.0f, 0.5f, 0.6f);
-
-        assertThat(ExchangeCall.isEngulfing(c1, c2)).isFalse();
-    }
-
-    @Test
-    void shouldBeFalseTheSecondCloseBelowTheFirst() {
-        Candle c1 = Candle.of(1.5f, 1.8f, 0.5f, 1.0f);
-        Candle c2 = Candle.of(0.9f, 5.0f, 1.5f, 1.5f);
-
-        assertThat(ExchangeCall.isEngulfing(c1, c2)).isFalse();
+        Candle[] candles = new Candle[]{
+                Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
+                Candle.of(0.9f, 5.0f, 4.5f, 2.5f)
+        };
+        assertThat(ExchangeCall.isEngulfing(candles)).isTrue();
     }
 
 
     @Test
-    void shouldBeFalseIfTheSecondNotOpenedBelowTheFirst() {
-        Candle c1 = Candle.of(1.5f, 1.8f, 0.5f, 1.0f);
-        Candle c2 = Candle.of(1.6f, 5.0f, 4.5f, 2.5f);
-
-        assertThat(ExchangeCall.isEngulfing(c1, c2)).isFalse();
+    void shouldBeFalseWhenClosedBelow() {
+        Candle[] candles = new Candle[]{
+                Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
+                Candle.of(0.9f, 5.0f, 4.5f, 1.4f)
+        };
+        assertThat(ExchangeCall.isEngulfing(candles)).isFalse();
     }
+
+    @Test
+    void shouldBeFalseWhenThePreviousIsBullish() {
+        Candle[] candles = new Candle[]{
+                Candle.of(1.5f, 2.8f, 1.5f, 1.6f),
+                Candle.of(0.9f, 5.0f, 4.5f, 1.4f)
+        };
+        assertThat(ExchangeCall.isEngulfing(candles)).isFalse();
+    }
+
+    @Test
+    void shouldBeFalseWhenTheCurrentHasNotOpenedBelow() {
+        Candle[] candles = new Candle[]{
+                Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
+                Candle.of(1.5f, 5.0f, 4.5f, 2.5f)
+        };
+        assertThat(ExchangeCall.isEngulfing(candles)).isFalse();
+    }
+
+
 }

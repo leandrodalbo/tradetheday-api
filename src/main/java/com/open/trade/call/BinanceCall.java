@@ -2,15 +2,14 @@ package com.open.trade.call;
 
 import com.open.trade.configuration.BinanceProps;
 import com.open.trade.data.Candle;
-import com.open.trade.model.Onehour;
-import com.open.trade.repository.OneHourRepository;
+import com.open.trade.model.Opportunity;
+import com.open.trade.repository.OpportunityRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class BinanceCall extends ExchangeCall {
@@ -19,21 +18,39 @@ public class BinanceCall extends ExchangeCall {
     private final int CANDLES_LIMIT = 2;
     private final BinanceProps props;
 
-    private final WebClient client;
 
-
-    private OneHourRepository repository;
-
-    public BinanceCall(WebClient.Builder builder, BinanceProps props) {
+    public BinanceCall(WebClient.Builder builder, OpportunityRepository repository, BinanceProps props) {
+        super(builder.baseUrl(props.binanceUri()).build(), repository);
         this.props = props;
-        this.client =  builder.baseUrl(props.binanceUri()).build();
     }
 
     @Override
     public void searchEngulfingEntries(String interval) {
         this.props.symbols().forEach(symbol -> {
-            saveInfo(symbol, this.fetchData(symbol, interval, CANDLES_LIMIT));
+            saveInfo(symbol, this.fetchData(symbol, interval, CANDLES_LIMIT), interval);
         });
+    }
+
+
+    @Override
+    protected void saveInfo(String symbol, List data, String interval) {
+        Candle[] twoCandles = candles(data);
+        if (isEngulfing(twoCandles)) {
+            Candle c1 = twoCandles[1];
+            repository.save(Opportunity.of(
+                    symbol,
+                    interval,
+                    true,
+                    c1.close(),
+                    c1.close() * props.stop(),
+                    c1.close() * props.profit(),
+                    0L,
+                    false,
+                    0f,
+                    0f,
+                    0f
+            ));
+        }
     }
 
     private List fetchData(String symbol, String interval, Integer limit) {
@@ -49,54 +66,4 @@ public class BinanceCall extends ExchangeCall {
                 .bodyToMono(List.class)
                 .block();
     }
-
-    private void saveInfo(String symbol, List data) {
-        Candle c0 = fromList((List) data.get(0));
-        Candle c1 = fromList((List) data.get(1));
-
-        if (isEngulfing(c0, c1)) {
-
-            Optional<Onehour> found = repository.findById(symbol);
-
-            if (found.isEmpty()) {
-                repository.save(new Onehour(
-                        symbol,
-                        true,
-                        c1.close(),
-                        props.stop() * c1.close(),
-                        props.profit() * c1.close(),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                ));
-            } else {
-                Onehour info = found.get();
-                repository.save(new Onehour(
-                        info.symbol(),
-                        true,
-                        c1.close(),
-                        props.stop() * c1.close(),
-                        props.profit() * c1.close(),
-                        info.krakenEntry(),
-                        info.krakenPrice(),
-                        info.krakenStop(),
-                        info.krakenProfit(),
-                        info.version()
-                ));
-            }
-
-        }
-    }
-
-    private Candle fromList(List<Object> values) {
-        return Candle.of(
-                Float.parseFloat((String) values.get(1)),
-                Float.parseFloat((String) values.get(2)),
-                Float.parseFloat((String) values.get(3)),
-                Float.parseFloat((String) values.get(4)));
-    }
-
-
 }
