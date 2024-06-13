@@ -46,5 +46,10 @@ public class EngulfingCandleStrategyTest {
         assertThat(strategy.isEngulfing(candles)).isFalse();
     }
 
+    @Test
+    void shouldBeFalseForNullCandles() {
+        assertThat(strategy.isEngulfing(new Candle[2])).isFalse();
+    }
+
 
 }

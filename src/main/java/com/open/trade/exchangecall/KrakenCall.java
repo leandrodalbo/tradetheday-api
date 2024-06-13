@@ -36,8 +36,18 @@ public class KrakenCall extends ExchangeCall {
                 .retrieve()
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
+                    Candle[] candles = new Candle[2];
+
                     Map data = (Map) it.result();
-                    return engulfingToArray((List) data.get(symbol));
+
+                    if (data != null) {
+                        candles[0] = engulfingToArray((List) data.get(symbol))[0];
+                        candles[1] = engulfingToArray((List) data.get(symbol))[1];
+                    }
+
+                    logger.info(String.format("| ENGULFING KRAKEN FETCH | -> Symbol: %s, %s ", symbol, candlesLogMessage(candles)));
+
+                    return candles;
                 })
                 .doOnError(e -> {
                     logger.warn(e.getMessage());

@@ -53,30 +53,26 @@ kraken:
   mac-algorithm: HmacSHA512
   symbols:
     - MANAUSDT
-    - MANAUSDT
     - BATUSD
     - CHZUSD
     - COMPUSD
     - SANDUSD
     - ADAUSD
     - ADAUSDT
-    - XLMUSD
+    - XXLMZUSD
     - AUDIOUSD
     - ZRXUSD
     - XRPUSDT
-    - XRPUSDT
-    - AVAXUSDT
     - AVAXUSDT
     - LINKUSDT
     - LINKUSD
-    - LTCUSD
-    - LTCUSDT
+    - XLTCZUSD
     - AAVEUSD
     - DOTUSDT
     - DOTUSD
     - MKRUSD
-    - AXSUSDT
-    - FETUSDT
+    - AXSUSD
+    - FETUSD
     - BCHUSDT
     - BCHUSD
     - GRTUSD

@@ -34,7 +34,11 @@ public class BinanceCall extends ExchangeCall {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(List.class)
-                .map(ExchangeCall::engulfingToArray)
+                .map(it -> {
+                    Candle[] candles = engulfingToArray(it);
+                    logger.info(String.format("| ENGULFING BINANCE FETCH | -> Symbol: %s, %s ", symbol, candlesLogMessage(candles)));
+                    return candles;
+                })
                 .doOnError(e -> {
                     logger.warn(e.getMessage());
                     logger.warn(String.format("Binance call failed fetching symbol: %s at speedL %s", symbol, speed));

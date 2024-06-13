@@ -18,7 +18,7 @@ public class FetchEngulfinEntries {
     @Autowired
     private EngulfingKrakenTrades krakenTrades;
 
-    @Scheduled(cron = "0 */15 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void fetchHighSpeedTrades() {
         logger.info("Fetching High Speed trades");
         binanceTrades.searchEntries(Speed.HIGH);

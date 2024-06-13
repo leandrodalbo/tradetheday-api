@@ -34,4 +34,10 @@ public class ExchangeCallTest {
                         }
                 );
     }
+
+    @Test
+    void willReturnTwoNullValuesIfThereIsNoCandles() {
+        assertThat(ExchangeCall.engulfingToArray(null)).isEqualTo(new Candle[]{null, null});
+        assertThat(ExchangeCall.engulfingToArray(List.of())).isEqualTo(new Candle[]{null, null});
+    }
 }
