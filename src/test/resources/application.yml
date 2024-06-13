@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: trade-signal
+  r2dbc:
+    username: user
+    password: password
+    url: r2dbc:postgresql://localhost:5432/opentrades
+  sql:
+    init:
+      mode: always
+binance:
+  binance-uri: https://api.binance.com
+  profit: 1.02
+  stop: 0.98
+  symbols:
+    - BTCUSDT
+    - SOLUSDT
+    - MATICUSDT
+    - HBARUSDT
+    - FTMUSDT
+    - SKLUSDT
+    - DOTUSDT
+    - GRTUSDT
+    - BCHUSDT
+    - FETUSDT
+    - AXSUSDT
+    - MKRUSDT
+    - SLPUSDT
+    - AAVEUSDT
+    - LTCUSDT
+    - LINKUSDT
+    - AVAXUSDT
+    - XRPUSDT
+    - ZRXUSDT
+    - AUDIOUSDT
+    - XLMUSDT
+    - ADAUSDT
+    - SANDUSDT
+    - COMPUSDT
+    - CHZUSDT
+    - BATUSDT
+    - MANAUSDT
+kraken:
+  api-uri: https://api.kraken.com
+  api-key:
+  api-secret:
+  profit: 1.05
+  stop: 0.96
+  mac-algorithm: HmacSHA512
+  symbols:
+    - SOLUSDT
+    - MATICUSD
+    - CHZUSD

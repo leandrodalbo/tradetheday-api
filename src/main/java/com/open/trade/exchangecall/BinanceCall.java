@@ -3,6 +3,8 @@ package com.open.trade.exchangecall;
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
 import com.open.trade.model.Speed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import java.util.List;
 @Component
 public class BinanceCall extends ExchangeCall {
     private static final String KLINES = "/api/v3/klines";
+    private final Logger logger = LoggerFactory.getLogger(BinanceCall.class);
     private final int TOTAL_CANDLES = 2;
 
     public BinanceCall(WebClientProvider clientProvider) {
@@ -31,7 +34,11 @@ public class BinanceCall extends ExchangeCall {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(List.class)
-                .map(ExchangeCall::engulfingToArray);
+                .map(ExchangeCall::engulfingToArray)
+                .doOnError(e -> {
+                    logger.warn(e.getMessage());
+                    logger.warn(String.format("Binance call failed fetching symbol: %s at speedL %s", symbol, speed));
+                });
     }
 
     private String interval(Speed speed) {

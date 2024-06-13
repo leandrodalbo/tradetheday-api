@@ -7,11 +7,16 @@ import com.open.trade.model.Opportunity;
 import com.open.trade.model.Speed;
 import com.open.trade.repository.OpportunityRepository;
 import com.open.trade.strategy.EngulfingCandleStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
 public class EngulfingBinanceSearch implements FetchNewTrades {
+
+    private final Logger logger = LoggerFactory.getLogger(EngulfingBinanceSearch.class);
+
     private final OpportunityRepository repository;
     private final EngulfingCandleStrategy strategy;
     private final BinanceProps props;
@@ -35,20 +40,42 @@ public class EngulfingBinanceSearch implements FetchNewTrades {
     private void saveInfo(String symbol, Mono<Candle[]> values, Speed speed) {
         values.subscribe(it -> {
             if (strategy.isEngulfing(it)) {
-                Candle c1 = it[1];
-                repository.save(Opportunity.of(
-                        symbol,
-                        speed,
-                        true,
-                        c1.close(),
-                        c1.close() * props.stop(),
-                        c1.close() * props.profit(),
-                        speed,
-                        false,
-                        0f,
-                        0f,
-                        0f
-                ));
+                repository.findBySymbol(symbol)
+                        .doOnError(e -> {
+                            logger.warn(e.getMessage());
+                            logger.warn("SAVING NEW OPPORTUNITY");
+
+                            Candle c1 = it[1];
+                            repository.save(Opportunity.of(
+                                    symbol,
+                                    speed,
+                                    true,
+                                    c1.close(),
+                                    c1.close() * props.stop(),
+                                    c1.close() * props.profit(),
+                                    speed,
+                                    false,
+                                    0f,
+                                    0f,
+                                    0f
+                            ));
+                        })
+                        .subscribe(opportunity -> {
+                            Candle c1 = it[1];
+                            repository.save(Opportunity.of(
+                                    symbol,
+                                    speed,
+                                    true,
+                                    c1.close(),
+                                    c1.close() * props.stop(),
+                                    c1.close() * props.profit(),
+                                    speed,
+                                    opportunity.krakenengulfing(),
+                                    opportunity.krakenprice(),
+                                    opportunity.krakenstop(),
+                                    opportunity.krakenprofit()
+                            ));
+                        });
             }
         });
     }

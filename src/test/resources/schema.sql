@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS opportunity;
 CREATE TABLE opportunity (
     id                BIGSERIAL PRIMARY KEY NOT NULL,
     symbol            varchar(50) UNIQUE NOT NULL,

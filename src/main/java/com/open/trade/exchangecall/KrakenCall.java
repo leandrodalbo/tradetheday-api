@@ -4,6 +4,8 @@ import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -15,6 +17,7 @@ import java.util.Map;
 @Component
 public class KrakenCall extends ExchangeCall {
     private static final String ON_PATH = "/0/public/OHLC";
+    private final Logger logger = LoggerFactory.getLogger(KrakenCall.class);
 
     public KrakenCall(WebClientProvider clientProvider) {
         super(clientProvider.krakenWebClient());
@@ -35,6 +38,10 @@ public class KrakenCall extends ExchangeCall {
                 .map(it -> {
                     Map data = (Map) it.result();
                     return engulfingToArray((List) data.get(symbol));
+                })
+                .doOnError(e -> {
+                    logger.warn(e.getMessage());
+                    logger.warn(String.format("Kraken call failed fetching symbol: %s at speedL %s", symbol, speed));
                 });
     }
 

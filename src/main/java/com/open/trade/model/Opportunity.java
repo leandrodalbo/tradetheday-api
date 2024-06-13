@@ -3,7 +3,9 @@ package com.open.trade.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table
 public record Opportunity(
 
         @Id
