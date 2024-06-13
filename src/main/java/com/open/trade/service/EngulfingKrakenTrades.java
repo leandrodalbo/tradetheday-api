@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-public class EngulfingKrakenSearch implements FetchNewTrades {
-    private final Logger logger = LoggerFactory.getLogger(EngulfingKrakenSearch.class);
+public class EngulfingKrakenTrades implements FetchNewTrades {
+    private final Logger logger = LoggerFactory.getLogger(EngulfingKrakenTrades.class);
 
     private final OpportunityRepository repository;
     private final EngulfingCandleStrategy strategy;
@@ -22,7 +22,7 @@ public class EngulfingKrakenSearch implements FetchNewTrades {
     private final KrakenCall krakenCall;
 
 
-    public EngulfingKrakenSearch(OpportunityRepository repository, EngulfingCandleStrategy strategy, KrakenProps props, KrakenCall krakenCall) {
+    public EngulfingKrakenTrades(OpportunityRepository repository, EngulfingCandleStrategy strategy, KrakenProps props, KrakenCall krakenCall) {
         this.repository = repository;
         this.strategy = strategy;
         this.props = props;

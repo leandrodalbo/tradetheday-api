@@ -13,16 +13,16 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-public class EngulfingBinanceSearch implements FetchNewTrades {
+public class EngulfingBinanceTrades implements FetchNewTrades {
 
-    private final Logger logger = LoggerFactory.getLogger(EngulfingBinanceSearch.class);
+    private final Logger logger = LoggerFactory.getLogger(EngulfingBinanceTrades.class);
 
     private final OpportunityRepository repository;
     private final EngulfingCandleStrategy strategy;
     private final BinanceProps props;
     private final BinanceCall binanceCall;
 
-    public EngulfingBinanceSearch(OpportunityRepository repository, EngulfingCandleStrategy strategy, BinanceProps props, BinanceCall binanceCall) {
+    public EngulfingBinanceTrades(OpportunityRepository repository, EngulfingCandleStrategy strategy, BinanceProps props, BinanceCall binanceCall) {
         this.repository = repository;
         this.strategy = strategy;
         this.props = props;

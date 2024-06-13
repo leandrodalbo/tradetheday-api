@@ -38,7 +38,7 @@ public class EngulfingKrakenSearchTest {
 
 
     @InjectMocks
-    EngulfingKrakenSearch search;
+    EngulfingKrakenTrades search;
 
     @Test
     void shouldUpdateOpportunities() {

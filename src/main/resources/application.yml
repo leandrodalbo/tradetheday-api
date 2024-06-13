@@ -17,33 +17,33 @@ binance:
   profit: 1.02
   stop: 0.98
   symbols:
-    - BTCUSDT
-    - SOLUSDT
-    - MATICUSDT
-    - HBARUSDT
-    - FTMUSDT
-    - SKLUSDT
-    - DOTUSDT
-    - GRTUSDT
-    - BCHUSDT
-    - FETUSDT
-    - AXSUSDT
-    - MKRUSDT
-    - SLPUSDT
-    - AAVEUSDT
-    - LTCUSDT
-    - LINKUSDT
-    - AVAXUSDT
-    - XRPUSDT
-    - ZRXUSDT
-    - AUDIOUSDT
-    - XLMUSDT
-    - ADAUSDT
-    - SANDUSDT
-    - COMPUSDT
-    - CHZUSDT
-    - BATUSDT
     - MANAUSDT
+      - BATUSDT
+      - CHZUSDT
+      - COMPUSDT
+      - SANDUSDT
+      - ADAUSDT
+      - XLMUSDT
+      - AUDIOUSDT
+      - ZRXUSDT
+      - XRPUSDT
+      - AVAXUSDT
+      - LINKUSDT
+      - LTCUSDT
+      - AAVEUSDT
+      - SLPUSDT
+      - DOTUSDT
+      - MKRUSDT
+      - AXSUSDT
+      - FETUSDT
+      - BCHUSDT
+      - GRTUSDT
+      - SKLUSDT
+      - FTMUSDT
+      - HBARUSDT
+      - MATICUSDT
+      - SOLUSDT
+      - BTCUSDT
 kraken:
   api-uri: https://api.kraken.com
   api-key:
@@ -52,6 +52,36 @@ kraken:
   stop: 0.96
   mac-algorithm: HmacSHA512
   symbols:
-    - SOLUSDT
-    - MATICUSD
-    - CHZUSD
+    - MANAUSDT
+      - MANAUSDT
+      - BATUSD
+      - CHZUSD
+      - COMPUSD
+      - SANDUSD
+      - ADAUSD
+      - ADAUSDT
+      - XLMUSD
+      - AUDIOUSD
+      - ZRXUSD
+      - XRPUSDT
+      - XRPUSDT
+      - AVAXUSDT
+      - AVAXUSDT
+      - LINKUSDT
+      - LINKUSD
+      - LTCUSD
+      - LTCUSDT
+      - AAVEUSD
+      - DOTUSDT
+      - DOTUSD
+      - MKRUSD
+      - AXSUSDT
+      - FETUSDT
+      - BCHUSDT
+      - BCHUSD
+      - GRTUSD
+      - FTMUSD
+      - MATICUSDT
+      - MATICUSD
+      - SOLUSDT
+      - SOLUSD

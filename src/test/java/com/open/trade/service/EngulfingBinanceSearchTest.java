@@ -37,7 +37,7 @@ public class EngulfingBinanceSearchTest {
     BinanceProps props;
 
     @InjectMocks
-    EngulfingBinanceSearch search;
+    EngulfingBinanceTrades search;
 
     @Test
     void shouldUpdateOpportunities() {
