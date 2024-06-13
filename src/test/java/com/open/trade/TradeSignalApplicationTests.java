@@ -1,5 +1,6 @@
 package com.open.trade;
 
+import com.open.trade.model.Speed;
 import com.open.trade.service.EngulfingBinanceSearch;
 import com.open.trade.service.EngulfingKrakenSearch;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,8 @@ class TradeSignalApplicationTests {
 
     @Test
     void contextLoads() {
-        bs.searchEntries("1d");
-        ks.searchEntries("240");
+        bs.searchEntries(Speed.HIGH);
+        ks.searchEntries(Speed.HIGH);
     }
 
 }

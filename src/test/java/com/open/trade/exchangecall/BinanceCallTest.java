@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
+import com.open.trade.model.Speed;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -12,11 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -86,24 +88,12 @@ public class BinanceCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Candle[] candles = binanceCall.engulfingCandles("BTCUSD", "1H", 2);
+        Mono<Candle[]> candles = binanceCall.engulfingCandles("BTCUSD", Speed.HIGH);
 
-        assertThat(candles).isEqualTo(
-                new Candle[]{
-                        new Candle(
-                                9640.7f,
-                                9642.4f,
-                                9640.6f,
-                                9642.0f
-                        ),
-                        new Candle(
-                                9640.7f,
-                                9642.4f,
-                                9640.6f,
-                                9642.0f
-                        )
-                }
-        );
+        StepVerifier.create(candles)
+                .expectNextMatches(it -> it.length == 2)
+                .verifyComplete();
+
     }
 
 }

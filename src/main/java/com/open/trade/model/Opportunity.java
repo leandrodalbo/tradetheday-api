@@ -11,7 +11,7 @@ public record Opportunity(
 
         String symbol,
 
-        String binancetimeframe,
+        Speed binancespeed,
 
         Boolean binanceengulfing,
 
@@ -21,7 +21,7 @@ public record Opportunity(
 
         Float binanceprofit,
 
-        Long krakentimeframe,
+        Speed krakenspeed,
 
         Boolean krakenengulfing,
 
@@ -37,12 +37,12 @@ public record Opportunity(
 
     public static Opportunity of(
             String symbol,
-            String binanceTimeframe,
+            Speed binanceSpeed,
             Boolean binanceEngulfing,
             Float binancePrice,
             Float binanceStop,
             Float binanceProfit,
-            Long krakenTimeFrame,
+            Speed krakenSpeed,
             Boolean krakenEngulfing,
             Float krakenPrice,
             Float krakenStop,
@@ -51,12 +51,12 @@ public record Opportunity(
         return new Opportunity(
                 null,
                 symbol,
-                binanceTimeframe,
+                binanceSpeed,
                 binanceEngulfing,
                 binancePrice,
                 binanceStop,
                 binanceProfit,
-                krakenTimeFrame,
+                krakenSpeed,
                 krakenEngulfing,
                 krakenPrice,
                 krakenStop,

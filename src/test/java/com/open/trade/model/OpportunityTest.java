@@ -10,12 +10,12 @@ public class OpportunityTest {
     void willHaveAFactoryMethod() {
         assertThat(Opportunity.of(
                 "BTCUSDT",
-                "1H",
+                Speed.HIGH,
                 true,
                 3000.00F,
                 3000.00F,
                 3000.00F,
-                60L,
+                Speed.HIGH,
                 false,
                 0.0f,
                 0.0f,

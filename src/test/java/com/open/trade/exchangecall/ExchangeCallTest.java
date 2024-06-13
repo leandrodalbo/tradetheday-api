@@ -20,7 +20,6 @@ public class ExchangeCallTest {
                 "23.0"
         );
 
-
         assertThat(ExchangeCall.engulfingToArray(List.of(data, data)))
                 .isEqualTo(
                         new Candle[]{

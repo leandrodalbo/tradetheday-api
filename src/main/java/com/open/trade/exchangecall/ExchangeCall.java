@@ -1,7 +1,9 @@
 package com.open.trade.exchangecall;
 
 import com.open.trade.data.Candle;
+import com.open.trade.model.Speed;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -33,4 +35,6 @@ public abstract class ExchangeCall {
 
         return result;
     }
+
+    public abstract Mono<Candle[]> engulfingCandles(String symbol, Speed speed);
 }

@@ -1,6 +1,10 @@
 spring:
   application:
     name: trade-signal
+  r2dbc:
+    username: user
+    password: password
+    url: r2dbc:postgresql://localhost:5432/opentrades
   liquibase:
     enabled: true
   datasource:

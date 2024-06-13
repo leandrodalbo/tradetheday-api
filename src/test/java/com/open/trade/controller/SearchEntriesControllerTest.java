@@ -1,6 +1,6 @@
 package com.open.trade.controller;
 
-import com.open.trade.service.SearchEntries;
+import com.open.trade.service.FetchNewTrades;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 public class SearchEntriesControllerTest {
 
     @MockBean
-    SearchEntries service;
+    FetchNewTrades service;
 
     @Autowired
     MockMvc mvc;
