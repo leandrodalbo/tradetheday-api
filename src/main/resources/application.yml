@@ -1,17 +1,17 @@
+server:
+  port: 8181
+
 spring:
   application:
     name: trade-signal
   r2dbc:
-    username: user
+    username: leandro
     password: password
     url: r2dbc:postgresql://localhost:5432/opentrades
-  liquibase:
-    enabled: true
-  datasource:
-    username: user
-    password: password
+  flyway:
     url: jdbc:postgresql://localhost:5432/opentrades
-
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
 binance:
   binance-uri: https://api.binance.com
   profit: 1.02
