@@ -5,7 +5,7 @@ spring:
   application:
     name: trade-signal
   r2dbc:
-    username: leandro
+    username: user
     password: password
     url: r2dbc:postgresql://localhost:5432/opentrades
   flyway:

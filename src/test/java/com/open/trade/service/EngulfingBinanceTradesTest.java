@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class EngulfingBinanceSearchTest {
+public class EngulfingBinanceTradesTest {
 
     @Mock
     OpportunityRepository repository;
