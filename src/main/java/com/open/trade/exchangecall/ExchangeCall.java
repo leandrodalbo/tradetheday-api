@@ -42,9 +42,9 @@ public abstract class ExchangeCall {
     protected String candlesLogMessage(Candle[] candles) {
         StringBuilder message = new StringBuilder();
 
-        message.append("firstCandle: ");
+        message.append(" firstCandle: ");
         message.append((candles[0] == null) ? "FIRST CANDLE IS NULL" : candles[0].toString());
-        message.append("secondCandle:");
+        message.append(" secondCandle:");
         message.append((candles[1] == null) ? "SECOND CANDLE IS NULL" : candles[1].toString());
 
         return message.toString();

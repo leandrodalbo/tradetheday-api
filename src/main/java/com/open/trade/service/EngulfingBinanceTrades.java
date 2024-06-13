@@ -40,6 +40,9 @@ public class EngulfingBinanceTrades implements FetchNewTrades {
     private void saveInfo(String symbol, Mono<Candle[]> values, Speed speed) {
         values.subscribe(it -> {
             if (strategy.isEngulfing(it)) {
+
+                logger.info("BINANCE-ENGULFIN", it[0], it[1]);
+
                 repository.findBySymbol(symbol)
                         .doOnError(e -> {
                             logger.warn(e.getMessage());

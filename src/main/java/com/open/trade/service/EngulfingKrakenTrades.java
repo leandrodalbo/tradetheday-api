@@ -41,6 +41,8 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
                 it -> {
                     if (strategy.isEngulfing(it)) {
 
+                        logger.info("KRAKEN-ENGULFIN", it[0], it[1]);
+
                         repository.findBySymbol(symbol)
                                 .doOnError(e -> {
                                     logger.warn(e.getMessage());
