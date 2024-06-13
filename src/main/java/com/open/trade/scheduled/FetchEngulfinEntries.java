@@ -5,7 +5,6 @@ import com.open.trade.service.EngulfingBinanceTrades;
 import com.open.trade.service.EngulfingKrakenTrades;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +12,14 @@ import org.springframework.stereotype.Component;
 public class FetchEngulfinEntries {
     private final Logger logger = LoggerFactory.getLogger(FetchEngulfinEntries.class);
 
-    @Autowired
-    EngulfingBinanceTrades binanceTrades;
-    @Autowired
-    private EngulfingKrakenTrades krakenTrades;
+    private final EngulfingBinanceTrades binanceTrades;
+
+    private final EngulfingKrakenTrades krakenTrades;
+
+    public FetchEngulfinEntries(EngulfingBinanceTrades binanceTrades, EngulfingKrakenTrades krakenTrades) {
+        this.binanceTrades = binanceTrades;
+        this.krakenTrades = krakenTrades;
+    }
 
     @Scheduled(cron = "0 */1 * * * *")
     public void fetchHighSpeedTrades() {
