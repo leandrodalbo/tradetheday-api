@@ -1,6 +1,11 @@
 server:
   port: 8181
-
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /opentrade/swagger.html
+  api-docs:
+    path: /opentrade/docs
 spring:
   application:
     name: trade-signal

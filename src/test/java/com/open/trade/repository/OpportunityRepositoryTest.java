@@ -1,6 +1,7 @@
 package com.open.trade.repository;
 
 
+import com.open.trade.model.Speed;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
@@ -50,5 +51,12 @@ public class OpportunityRepositoryTest {
     public void willNotFindOpportunityBySymbol() {
         StepVerifier.create(repository.findBySymbol("XSDSDT"))
                 .expectError();
+    }
+
+    @Test
+    public void willFindHighSpeedEngulfingEntries() {
+        StepVerifier.create(repository.findEngulfingBySpeed(Speed.HIGH))
+                .thenConsumeWhile(it -> it.krakenspeed().equals(Speed.HIGH) || it.binancespeed().equals(Speed.HIGH))
+                .verifyComplete();
     }
 }

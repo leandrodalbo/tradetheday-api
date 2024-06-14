@@ -12,3 +12,18 @@ INSERT INTO opportunity(symbol,
                         version)
 VALUES('BTCUSDT','HIGH', TRUE, 2.0, 1.8, 2.2,
        'HIGH',TRUE, 2.0, 1.8, 2.2,0);
+
+INSERT INTO opportunity(symbol,
+                        binancespeed,
+                        binanceengulfing,
+                        binanceprice,
+                        binancestop,
+                        binanceprofit,
+                        krakenspeed,
+                        krakenengulfing,
+                        krakenprice,
+                        krakenstop,
+                        krakenprofit,
+                        version)
+VALUES('SOLUSD','LOW', FALSE, 2.0, 1.8, 2.2,
+       'HIGH',TRUE, 2.0, 1.8, 2.2,0);
