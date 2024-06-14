@@ -1,11 +1,11 @@
 # Crypto
  
-## find trading opportunities by fetching OHLC candles (Binance/Kraken) 
+## Find trading entries with OHLC candles (Binance/Kraken) 
 
-## open and monitor orders (Kraken) 
+## Open and monitor orders (Kraken) 
 - todo
 
-## trading day summary 
+## Trading day summary 
 - todo
 
 ### Postgres Container
