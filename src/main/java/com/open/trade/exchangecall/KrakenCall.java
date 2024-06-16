@@ -2,6 +2,8 @@ package com.open.trade.exchangecall;
 
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
+import com.open.trade.data.KrakenOrderPost;
+import com.open.trade.data.KrakenPostResult;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import java.util.Map;
 @Component
 public class KrakenCall extends ExchangeCall {
     private static final String ON_PATH = "/0/public/OHLC";
+    private static final String API_KEY_HEADER = "API-Key";
+    private static final String API_SIGN_HEADER = "API-Sign";
     private final Logger logger = LoggerFactory.getLogger(KrakenCall.class);
 
     public KrakenCall(WebClientProvider clientProvider) {
@@ -55,6 +59,35 @@ public class KrakenCall extends ExchangeCall {
                 });
     }
 
+    public Mono<KrakenPostResult> postOrder(KrakenOrderPost orderPost) {
+        return client.post()
+                .uri(
+                        orderPost.uriPath()
+                )
+                .header(API_KEY_HEADER, orderPost.apiKey())
+                .header(API_SIGN_HEADER, orderPost.signature())
+                .bodyValue(orderPost.body())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(it -> {
+
+                    Map response = it;
+
+                    if (((List) response.get("error")).size() > 0) {
+                        logger.warn("KRAKEN ORDER FAILED");
+                        return new KrakenPostResult(false, "Kraken order failed");
+                    }
+
+                    logger.info(String.format("Order Created for Pair %s", orderPost.body().pair()));
+                    return new KrakenPostResult(true, String.format("Order Created for Pair %s", orderPost.body().pair()));
+
+                })
+                .doOnError(e -> {
+                    logger.warn(e.getMessage());
+                    logger.warn(String.format(String.format("Kraken post failed: %", orderPost)));
+                });
+    }
+
     private long sinceParameter(Speed speed) {
         return switch (speed) {
             case HIGH -> Instant.now().minus(2, ChronoUnit.HOURS).getEpochSecond();
@@ -70,4 +103,6 @@ public class KrakenCall extends ExchangeCall {
             default -> 1440;
         };
     }
+
+
 }

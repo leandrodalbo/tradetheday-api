@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
+import com.open.trade.data.KrakenOrderPost;
+import com.open.trade.data.KrakenOrderPostBody;
+import com.open.trade.data.KrakenPostResult;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
 import okhttp3.mockwebserver.MockResponse;
@@ -93,6 +96,52 @@ public class KrakenCallTest {
 
         StepVerifier.create(candles)
                 .expectNextMatches(it -> it.length == 2)
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldPostANewOrder() throws JsonProcessingException {
+        var mockResponse = new MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(mapper.writeValueAsString(
+                        new KrakenResponse(new String[0], null)
+                ));
+
+        mockWebServer.enqueue(mockResponse);
+
+        Mono<KrakenPostResult> candles = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
+                System.currentTimeMillis(),
+                "market",
+                "buy",
+                0.2,
+                "SOLUSD"
+        )));
+
+        StepVerifier.create(candles)
+                .expectNextMatches(KrakenPostResult::success)
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldHandleItWhenPostingAnOrderFails() throws JsonProcessingException {
+        var mockResponse = new MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(mapper.writeValueAsString(
+                        new KrakenResponse(new String[]{"failed"}, null)
+                ));
+
+        mockWebServer.enqueue(mockResponse);
+
+        Mono<KrakenPostResult> candles = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
+                System.currentTimeMillis(),
+                "market",
+                "buy",
+                0.2,
+                "SOLUSD"
+        )));
+
+        StepVerifier.create(candles)
+                .expectNextMatches(it -> !it.success())
                 .verifyComplete();
     }
 
