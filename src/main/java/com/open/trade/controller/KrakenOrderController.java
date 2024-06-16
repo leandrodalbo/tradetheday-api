@@ -20,7 +20,7 @@ public class KrakenOrderController {
     }
 
     @PostMapping("/kraken/neworder")
-    public Mono<Trade> findByEngulfingBySpeed(@RequestBody OpenTrade openTrade) {
+    public Mono<Trade> newTrade(@RequestBody OpenTrade openTrade) {
         return orderService.newTrade(openTrade);
     }
 
