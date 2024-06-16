@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.Instant;
+
 @Table
 public record Opportunity(
 
@@ -32,6 +34,8 @@ public record Opportunity(
         Float krakenstop,
 
         Float krakenprofit,
+
+        Long ondatetime,
 
         @Version
         Integer version
@@ -63,6 +67,7 @@ public record Opportunity(
                 krakenPrice,
                 krakenStop,
                 krakenProfit,
+                Instant.now().getEpochSecond(),
                 null
         );
     }

@@ -1,0 +1,1 @@
+ALTER TABLE opportunity ADD COLUMN ondatetime BIGINT NOT NULL;

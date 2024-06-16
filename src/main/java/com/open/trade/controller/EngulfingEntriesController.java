@@ -21,7 +21,7 @@ public class EngulfingEntriesController {
 
     @GetMapping("/engulfing/{speed}")
     public Flux<Opportunity> findByEngulfingBySpeed(@PathVariable Speed speed) {
-        return opportunitiesService.findEngulfingBySpeed(speed);
+        return opportunitiesService.findTodayEngulfingBySpeed(speed);
     }
 
 }

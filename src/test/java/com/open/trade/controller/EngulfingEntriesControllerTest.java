@@ -26,7 +26,7 @@ public class EngulfingEntriesControllerTest {
     @Test
     void shouldGETEngulfingResultsBySpeed() {
 
-        given(service.findEngulfingBySpeed(any())).willReturn(
+        given(service.findTodayEngulfingBySpeed(any())).willReturn(
                 Flux.just(Opportunity.of(
                         "BTCUSDT",
                         Speed.HIGH,

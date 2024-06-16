@@ -12,5 +12,6 @@ CREATE TABLE opportunity (
     krakenprice       DECIMAL,
     krakenstop        DECIMAL,
     krakenprofit      DECIMAL,
+    ondatetime        BIGINT NOT NULL,
     version           INTEGER NOT NULL
 );

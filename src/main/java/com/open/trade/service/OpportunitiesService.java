@@ -6,6 +6,9 @@ import com.open.trade.repository.OpportunityRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 @Service
 public class OpportunitiesService {
 
@@ -15,7 +18,9 @@ public class OpportunitiesService {
         this.repository = repository;
     }
 
-    public Flux<Opportunity> findEngulfingBySpeed(Speed speed) {
-        return repository.findEngulfingBySpeed(speed);
+    public Flux<Opportunity> findTodayEngulfingBySpeed(Speed speed) {
+        return repository.findEngulfingBySpeed(speed)
+                .filter(it ->
+                        it.ondatetime() > Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond());
     }
 }
