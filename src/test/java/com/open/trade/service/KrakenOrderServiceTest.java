@@ -77,4 +77,28 @@ public class KrakenOrderServiceTest {
 
         verify(krakenCall, times(1)).postOrder(any());
     }
+
+    @Test
+    void willGetAnErrorWhenItFailed() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.macAlgorithm()).thenReturn("HmacSHA512");
+        when(props.shaAlgorithm()).thenReturn("SHA-256");
+        when(props.privateUriPath()).thenReturn("/0/private/AddOrder");
+        when(props.orderType()).thenReturn("market");
+
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));
+
+        Mono<Trade> result = service.newTrade(new OpenTrade(
+                "SdLUSD",
+                2.3,
+                54.0,
+                50.1
+        ));
+
+        StepVerifier.create(result)
+                .expectError();
+
+        verify(krakenCall, times(1)).postOrder(any());
+    }
 }

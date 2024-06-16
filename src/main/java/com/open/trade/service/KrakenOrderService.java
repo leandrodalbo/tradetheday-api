@@ -2,6 +2,7 @@ package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
 import com.open.trade.data.*;
+import com.open.trade.exception.KrakenOrderException;
 import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeStatus;
@@ -33,13 +34,18 @@ public class KrakenOrderService {
     public Mono<Trade> newTrade(OpenTrade trade) {
         return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY)
                 .flatMap(it ->
-                        repository.save(Trade.of(
-                                trade.symbol(),
-                                trade.volume(),
-                                trade.profitprice(),
-                                trade.stopprice(),
-                                TradeStatus.OPEN
-                        ))
+                        {
+                            if (!it.success()) {
+                                return Mono.error(new KrakenOrderException());
+                            }
+                            return repository.save(Trade.of(
+                                    trade.symbol(),
+                                    trade.volume(),
+                                    trade.profitprice(),
+                                    trade.stopprice(),
+                                    TradeStatus.OPEN
+                            ));
+                        }
                 );
     }
 
