@@ -1,15 +1,10 @@
-CREATE TABLE opportunity (
+CREATE TABLE trade (
     id                BIGSERIAL PRIMARY KEY NOT NULL,
-    symbol            varchar(50) UNIQUE NOT NULL,
-    binancespeed      varchar(20) NOT NULL,
-    binanceengulfing  BOOLEAN NOT NULL,
-    binanceprice      DECIMAL,
-    binancestop       DECIMAL,
-    binanceprofit     DECIMAL,
-    krakenspeed       varchar(20) NOT NULL,
-    krakenengulfing   BOOLEAN NOT NULL,
-    krakenprice       DECIMAL,
-    krakenstop        DECIMAL,
-    krakenprofit      DECIMAL,
+    symbol            varchar(50) NOT NULL,
+    volume            DECIMAL NOT NULL,
+    profitprice       DECIMAL NOT NULL,
+    stopprice         DECIMAL NOT NULL,
+    status            varchar(20) NOT NULL,
+    ondatetime        BIGINT NOT NULL,
     version           INTEGER NOT NULL
 );

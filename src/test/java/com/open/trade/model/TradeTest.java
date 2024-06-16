@@ -4,23 +4,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OpportunityTest {
+public class TradeTest {
 
     @Test
     void willHaveAFactoryMethod() {
-        assertThat(Opportunity.of(
+        assertThat(Trade.of(
                 "BTCUSDT",
-                Speed.HIGH,
-                true,
-                3000.00F,
-                3000.00F,
-                3000.00F,
-                Speed.HIGH,
-                false,
-                0.0f,
-                0.0f,
-                0.0f
-        )).isExactlyInstanceOf(Opportunity.class);
+                0.1,
+                3.4,
+                3.2,
+                TradeStatus.OPEN
+        )).isExactlyInstanceOf(Trade.class);
     }
 
 }

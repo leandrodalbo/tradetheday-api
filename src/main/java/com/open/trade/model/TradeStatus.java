@@ -1,12 +1,11 @@
 package com.open.trade.model;
 
 public enum TradeStatus {
-    BUY("buy"),
-    SELL("sell");
+    OPEN("OPEN"), CLOSED("CLOSE");
 
-    private final String buysell;
+    private final String status;
 
-    TradeStatus(String buysell) {
-        this.buysell = buysell;
+    TradeStatus(String status) {
+        this.status = status;
     }
 }

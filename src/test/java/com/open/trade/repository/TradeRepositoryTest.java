@@ -1,7 +1,6 @@
 package com.open.trade.repository;
 
-
-import com.open.trade.model.Speed;
+import com.open.trade.model.TradeStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
@@ -23,7 +22,7 @@ public class TradeRepositoryTest {
 
 
     @Autowired
-    private OpportunityRepository repository;
+    private TradeRepository repository;
 
     private static String r2dbcUrl() {
         return String.format("r2dbc:postgresql://%s:%s/%s",
@@ -40,23 +39,10 @@ public class TradeRepositoryTest {
     }
 
     @Test
-    public void willFindOpportunityBySymbol() {
-
-        StepVerifier.create(repository.findBySymbol("BTCUSDT"))
-                .expectNextMatches(opportunity -> opportunity.symbol().equals("BTCUSDT"))
+    public void willFindOpenTrades() {
+        StepVerifier.create(repository.findByStatus(TradeStatus.OPEN))
+                .expectNextMatches(it -> it.status().equals(TradeStatus.OPEN))
                 .verifyComplete();
     }
 
-    @Test
-    public void willNotFindOpportunityBySymbol() {
-        StepVerifier.create(repository.findBySymbol("XSDSDT"))
-                .expectError();
-    }
-
-    @Test
-    public void willFindHighSpeedEngulfingEntries() {
-        StepVerifier.create(repository.findEngulfingBySpeed(Speed.HIGH))
-                .thenConsumeWhile(it -> it.krakenspeed().equals(Speed.HIGH) || it.binancespeed().equals(Speed.HIGH))
-                .verifyComplete();
-    }
 }

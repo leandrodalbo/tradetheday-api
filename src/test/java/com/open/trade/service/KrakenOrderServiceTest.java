@@ -1,18 +1,20 @@
 package com.open.trade.service;
 
-import com.open.trade.model.Opportunity;
-import com.open.trade.model.Speed;
-import com.open.trade.repository.OpportunityRepository;
+import com.open.trade.configuration.KrakenProps;
+import com.open.trade.data.KrakenBuySell;
+import com.open.trade.data.KrakenPostResult;
+import com.open.trade.data.OpenTrade;
+import com.open.trade.exchangecall.KrakenCall;
+import com.open.trade.model.Trade;
+import com.open.trade.model.TradeStatus;
+import com.open.trade.repository.TradeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -21,51 +23,58 @@ import static org.mockito.Mockito.*;
 public class KrakenOrderServiceTest {
 
     @Mock
-    OpportunityRepository repository;
+    TradeRepository repository;
 
+    @Mock
+    KrakenCall krakenCall;
+
+    @Mock
+    KrakenProps props;
 
     @InjectMocks
-    OpportunitiesService service;
+    KrakenOrderService service;
 
     @Test
-    void findBySpeed() {
-        when(repository.findEngulfingBySpeed(any())).thenReturn(
-                Flux.just(Opportunity.of(
-                                "BTCUSDT",
-                                Speed.HIGH,
-                                true,
-                                3000.00F,
-                                3000.00F,
-                                3000.00F,
-                                Speed.HIGH,
-                                false,
-                                0.0f,
-                                0.0f,
-                                0.0f
-                        ),
-                        new Opportunity(23123L,
-                                "BTCUSDT",
-                                Speed.HIGH,
-                                true,
-                                3000.00F,
-                                3000.00F,
-                                3000.00F,
-                                Speed.LOW,
-                                false,
-                                0.0f,
-                                0.0f,
-                                0.0f,
-                                Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond(),
-                                0
+    void willPostAMarketOrder() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.macAlgorithm()).thenReturn("HmacSHA512");
+        when(props.shaAlgorithm()).thenReturn("SHA-256");
+        when(props.privateUriPath()).thenReturn("/0/private/AddOrder");
+        when(props.orderType()).thenReturn("market");
 
-                        ))
-        );
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Flux<Opportunity> result = service.findTodayEngulfingBySpeed(Speed.HIGH);
+        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY);
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> it.binancespeed().equals(Speed.HIGH) && it.krakenspeed().equals(Speed.HIGH) && it.ondatetime() > Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond());
+                .thenConsumeWhile(KrakenPostResult::success);
 
-        verify(repository, times(1)).findEngulfingBySpeed(any());
+        verify(krakenCall, times(1)).postOrder(any());
+    }
+
+
+    @Test
+    void willOpenAnewTrade() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.macAlgorithm()).thenReturn("HmacSHA512");
+        when(props.shaAlgorithm()).thenReturn("SHA-256");
+        when(props.privateUriPath()).thenReturn("/0/private/AddOrder");
+        when(props.orderType()).thenReturn("market");
+
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
+
+        Mono<Trade> result = service.newTrade(new OpenTrade(
+                "SOLUSD",
+                2.3,
+                54.0,
+                50.1
+        ));
+
+        StepVerifier.create(result)
+                .thenConsumeWhile(it -> it.status().equals(TradeStatus.OPEN));
+
+        verify(krakenCall, times(1)).postOrder(any());
     }
 }

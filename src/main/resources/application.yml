@@ -53,13 +53,12 @@ kraken:
   api-uri: https://api.kraken.com
   api-key:
   api-secret:
-  profit: 1.05
-  stop: 0.96
+  profit: 1.02
+  stop: 0.98
   mac-algorithm: HmacSHA512
   sha-algorithm: SHA-256
   private-uri-path: /0/private/AddOrder
   order-type: market
-  total-orders: 5
   symbols:
     - 1INCHUSD
     - AAVEUSD

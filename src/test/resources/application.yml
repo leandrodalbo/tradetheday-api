@@ -44,8 +44,8 @@ kraken:
   api-uri: https://api.kraken.com
   api-key:
   api-secret:
-  profit: 1.05
-  stop: 0.96
+  profit: 1.02
+  stop: 0.98
   mac-algorithm: HmacSHA512
   symbols:
     - SOLUSDT

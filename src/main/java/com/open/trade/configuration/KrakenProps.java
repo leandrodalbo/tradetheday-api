@@ -10,7 +10,6 @@ public record KrakenProps(String apiUri, String apiKey, String apiSecret, Float 
                           String macAlgorithm,
                           String shaAlgorithm,
                           String privateUriPath,
-                          String orderType,
-                          int totalOrders
+                          String orderType
 ) {
 }

@@ -11,15 +11,15 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("opentrade/crypto")
-public class KrakenOrderControllerController {
+public class KrakenOrderController {
 
     private final KrakenOrderService orderService;
 
-    public KrakenOrderControllerController(KrakenOrderService orderService) {
+    public KrakenOrderController(KrakenOrderService orderService) {
         this.orderService = orderService;
     }
 
-    @PostMapping("/kraken/neworder}")
+    @PostMapping("/kraken/neworder")
     public Mono<Trade> findByEngulfingBySpeed(@RequestBody OpenTrade openTrade) {
         return orderService.newTrade(openTrade);
     }

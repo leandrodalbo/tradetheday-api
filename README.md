@@ -5,11 +5,11 @@
 - /opentrade/swagger.html
 - /opentrade/docs
 
-## GET trading entries request
+## Check Trading entries
 
-- /opentrade/crypto/engulfing/{speed}
+- GET /opentrade/crypto/engulfing/{speed}
 
-## GET trading entries response example
+### Response
 
 ```json
 [
@@ -31,9 +31,35 @@
 ]
 ```
 
-## Open and monitor orders (Kraken)
+## Open new trade
 
-- todo
+- POST /opentrade/crypto/kraken/neworder
+
+### Request Body
+
+```json
+{
+  "symbol": "string",
+  "volume": 0,
+  "profitprice": 0,
+  "stopprice": 0
+}
+```
+
+### Response
+
+```json
+{
+  "id": 1,
+  "symbol": "string",
+  "volume": 0,
+  "profitprice": 0,
+  "stopprice": 0,
+  "status": "OPEN",
+  "ondatetime": 1718556594,
+  "version": 0
+}
+```
 
 ## Trading day summary
 
