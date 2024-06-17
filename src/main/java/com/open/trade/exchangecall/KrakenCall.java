@@ -1,9 +1,9 @@
 package com.open.trade.exchangecall;
 
 import com.open.trade.configuration.WebClientProvider;
-import com.open.trade.data.Candle;
 import com.open.trade.data.kraken.KrakenOrderPost;
 import com.open.trade.data.kraken.KrakenPostResult;
+import com.open.trade.exception.KrakenEngulfingException;
 import com.open.trade.exception.KrakenTickerException;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
@@ -28,7 +28,6 @@ public class KrakenCall extends ExchangeCall {
     public KrakenCall(WebClientProvider clientProvider) {
         super(clientProvider.krakenWebClient());
     }
-
 
     public Mono<Object> latestPrice(String symbol) {
         return client.get()
@@ -57,7 +56,7 @@ public class KrakenCall extends ExchangeCall {
     }
 
     @Override
-    public Mono<Candle[]> engulfingCandles(String symbol, Speed speed) {
+    public Mono engulfingCandles(String symbol, Speed speed) {
         return client.get()
                 .uri(
                         builder -> builder.path(OHLC_URL)
@@ -69,18 +68,13 @@ public class KrakenCall extends ExchangeCall {
                 .retrieve()
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
-                    Candle[] candles = new Candle[2];
-
-                    Map data = (Map) it.result();
-
-                    if (data != null) {
-                        candles[0] = engulfingToArray((List) data.get(symbol))[0];
-                        candles[1] = engulfingToArray((List) data.get(symbol))[1];
+                    if (it.error().length > 0) {
+                        return Mono.error(new KrakenEngulfingException());
                     }
 
-                    logger.info(String.format("| ENGULFING KRAKEN FETCH | -> Symbol: %s, %s ", symbol, candlesLogMessage(candles)));
+                    Map data = (Map) it.result();
+                    return engulfingToArray((List) data.get(symbol));
 
-                    return candles;
                 })
                 .doOnError(e -> {
                     logger.warn(e.getMessage());
@@ -102,8 +96,8 @@ public class KrakenCall extends ExchangeCall {
 
                     Map response = it;
 
-                    if (((List) response.get("error")).size() > 0) {
-                        logger.warn("KRAKEN ORDER FAILED");
+                    if (!((List) response.get("error")).isEmpty()) {
+                        logger.warn("Kraken order failed");
                         return new KrakenPostResult(false, "Kraken order failed");
                     }
 
@@ -119,9 +113,9 @@ public class KrakenCall extends ExchangeCall {
 
     private long sinceParameter(Speed speed) {
         return switch (speed) {
-            case HIGH -> Instant.now().minus(2, ChronoUnit.HOURS).getEpochSecond();
-            case MEDIUM -> Instant.now().minus(8, ChronoUnit.HOURS).getEpochSecond();
-            default -> Instant.now().minus(2, ChronoUnit.DAYS).getEpochSecond();
+            case HIGH -> Instant.now().minus(3, ChronoUnit.HOURS).getEpochSecond();
+            case MEDIUM -> Instant.now().minus(12, ChronoUnit.HOURS).getEpochSecond();
+            default -> Instant.now().minus(3, ChronoUnit.DAYS).getEpochSecond();
         };
     }
 

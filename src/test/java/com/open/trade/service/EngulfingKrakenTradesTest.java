@@ -62,6 +62,7 @@ public class EngulfingKrakenTradesTest {
         when(krakenCall.engulfingCandles(any(), any())).thenReturn(
                 Mono.just(new Candle[]{
                         Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
+                        Candle.of(0.9f, 5.0f, 4.5f, 2.5f),
                         Candle.of(0.9f, 5.0f, 4.5f, 2.5f)
                 })
         );
@@ -83,6 +84,7 @@ public class EngulfingKrakenTradesTest {
         when(krakenCall.engulfingCandles(any(), any())).thenReturn(
                 Mono.just(new Candle[]{
                         Candle.of(1.5f, 1.8f, 0.5f, 1.0f),
+                        Candle.of(0.9f, 5.0f, 4.5f, 2.5f),
                         Candle.of(0.9f, 5.0f, 4.5f, 2.5f)
                 })
         );

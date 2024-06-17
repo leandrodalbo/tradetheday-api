@@ -82,16 +82,30 @@ public class BinanceCallTest {
                                 "119",
                                 "1.23424865",
                                 "0"
+                        ),
+                        List.of(
+                                1591258320000L,
+                                "9640.7",
+                                "9642.4",
+                                "9640.6",
+                                "9642.0",
+                                "206",
+                                1591258379999L,
+                                "2.13660389",
+                                48,
+                                "119",
+                                "1.23424865",
+                                "0"
                         )
 
                 )));
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<Candle[]> candles = binanceCall.engulfingCandles("BTCUSD", Speed.HIGH);
+        Mono candles = binanceCall.engulfingCandles("BTCUSD", Speed.HIGH);
 
         StepVerifier.create(candles)
-                .expectNextMatches(it -> it.length == 2)
+                .expectNextMatches(it -> ((Candle[]) it).length == 3)
                 .verifyComplete();
 
     }

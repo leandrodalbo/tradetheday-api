@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ExchangeCallTest {
 
     @Test
-    void willReturnAnArrayOfTwoCandles() {
+    void willReturnAnArrayOfThreeCandles() {
         List<Object> data = List.of(
                 String.valueOf(Instant.now().getEpochSecond()),
                 "23.0",
@@ -20,9 +20,13 @@ public class ExchangeCallTest {
                 "23.0"
         );
 
-        assertThat(ExchangeCall.engulfingToArray(List.of(data, data)))
+        assertThat(ExchangeCall.engulfingToArray(List.of(data, data, data)))
                 .isEqualTo(
                         new Candle[]{
+                                Candle.of(23.0f,
+                                        23.0f,
+                                        23.0f,
+                                        23.0f),
                                 Candle.of(23.0f,
                                         23.0f,
                                         23.0f,
@@ -36,8 +40,8 @@ public class ExchangeCallTest {
     }
 
     @Test
-    void willReturnTwoNullValuesIfThereIsNoCandles() {
-        assertThat(ExchangeCall.engulfingToArray(null)).isEqualTo(new Candle[]{null, null});
-        assertThat(ExchangeCall.engulfingToArray(List.of())).isEqualTo(new Candle[]{null, null});
+    void willReturnAndArrayOfNullValues() {
+        assertThat(ExchangeCall.engulfingToArray(null)).isEqualTo(new Candle[]{null, null, null});
+        assertThat(ExchangeCall.engulfingToArray(List.of())).isEqualTo(new Candle[]{null, null, null});
     }
 }

@@ -36,26 +36,22 @@ public class EngulfingBinanceTrades implements FetchNewTrades {
         });
     }
 
-
-    private void saveInfo(String symbol, Mono<Candle[]> values, Speed speed) {
+    private void saveInfo(String symbol, Mono values, Speed speed) {
         values.subscribe(it -> {
-            if (strategy.isEngulfing(it)) {
-
-                logger.info("BINANCE-ENGULFIN", it[0], it[1]);
+            Candle[] candles = (Candle[]) it;
+            if (strategy.isEngulfing(candles)) {
 
                 repository.findBySymbol(symbol)
                         .doOnError(e -> {
                             logger.warn(e.getMessage());
-                            logger.warn("SAVING NEW OPPORTUNITY");
-
-                            Candle c1 = it[1];
+                            Candle c = candles[2];
                             repository.save(Opportunity.of(
                                     symbol,
                                     speed,
                                     true,
-                                    c1.close(),
-                                    c1.close() * props.stop(),
-                                    c1.close() * props.profit(),
+                                    c.close(),
+                                    c.close() * props.stop(),
+                                    c.close() * props.profit(),
                                     speed,
                                     false,
                                     0f,
@@ -64,14 +60,14 @@ public class EngulfingBinanceTrades implements FetchNewTrades {
                             ));
                         })
                         .subscribe(opportunity -> {
-                            Candle c1 = it[1];
+                            Candle c = candles[2];
                             repository.save(Opportunity.of(
                                     symbol,
                                     speed,
                                     true,
-                                    c1.close(),
-                                    c1.close() * props.stop(),
-                                    c1.close() * props.profit(),
+                                    c.close(),
+                                    c.close() * props.stop(),
+                                    c.close() * props.profit(),
                                     speed,
                                     opportunity.krakenengulfing(),
                                     opportunity.krakenprice(),

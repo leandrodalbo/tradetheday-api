@@ -36,19 +36,17 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
         });
     }
 
-    private void saveInfo(String symbol, Mono<Candle[]> values, Speed speed) {
+    private void saveInfo(String symbol, Mono values, Speed speed) {
         values.subscribe(
                 it -> {
-                    if (strategy.isEngulfing(it)) {
-
-                        logger.info("KRAKEN-ENGULFIN", it[0], it[1]);
+                    Candle[] candles = (Candle[]) it;
+                    if (strategy.isEngulfing(candles)) {
 
                         repository.findBySymbol(symbol)
                                 .doOnError(e -> {
                                     logger.warn(e.getMessage());
-                                    logger.warn("SAVING NEW OPPORTUNITY");
 
-                                    Candle c1 = it[1];
+                                    Candle c = candles[2];
 
                                     repository.save(Opportunity.of(
                                             symbol,
@@ -59,14 +57,14 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
                                             0f,
                                             speed,
                                             true,
-                                            c1.close(),
-                                            c1.close() * props.stop(),
-                                            c1.close() * props.profit()
+                                            c.close(),
+                                            c.close() * props.stop(),
+                                            c.close() * props.profit()
                                     ));
                                 })
                                 .subscribe(opportunity -> {
 
-                                    Candle c1 = it[1];
+                                    Candle c = candles[2];
                                     repository.save(Opportunity.of(
                                             symbol,
                                             speed,
@@ -76,9 +74,9 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
                                             opportunity.binanceprofit(),
                                             speed,
                                             true,
-                                            c1.close(),
-                                            c1.close() * props.stop(),
-                                            c1.close() * props.profit()
+                                            c.close(),
+                                            c.close() * props.stop(),
+                                            c.close() * props.profit()
                                     ));
                                 });
                     }

@@ -84,6 +84,15 @@ public class KrakenCallTest {
                                                         "30305.7",
                                                         "30306.1",
                                                         "3.39243896",
+                                                        23),
+                                                List.of(
+                                                        1688671200,
+                                                        "30306.1",
+                                                        "30306.2",
+                                                        "30305.7",
+                                                        "30305.7",
+                                                        "30306.1",
+                                                        "3.39243896",
                                                         23)
                                         )
                                 )
@@ -92,10 +101,10 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<Candle[]> candles = krakenCall.engulfingCandles("BTCUSD", Speed.HIGH);
+        Mono candles = krakenCall.engulfingCandles("BTCUSD", Speed.HIGH);
 
         StepVerifier.create(candles)
-                .expectNextMatches(it -> it.length == 2)
+                .expectNextMatches(it -> ((Candle[]) it).length == 3)
                 .verifyComplete();
     }
 

@@ -16,13 +16,14 @@ public abstract class ExchangeCall {
     }
 
     public static Candle[] engulfingToArray(List values) {
-        Candle[] result = new Candle[2];
+        Candle[] result = new Candle[3];
 
-        if (values == null || values.size() < 2)
+        if (values == null || values.size() < 3)
             return result;
 
         List valuesC0 = (List) values.get(0);
         List valuesC1 = (List) values.get(1);
+        List valuesC2 = (List) values.get(2);
 
         result[0] = Candle.of(
                 Float.parseFloat((String) valuesC0.get(1)),
@@ -36,19 +37,20 @@ public abstract class ExchangeCall {
                 Float.parseFloat((String) valuesC1.get(3)),
                 Float.parseFloat((String) valuesC1.get(4)));
 
+        result[2] = Candle.of(
+                Float.parseFloat((String) valuesC2.get(1)),
+                Float.parseFloat((String) valuesC2.get(2)),
+                Float.parseFloat((String) valuesC2.get(3)),
+                Float.parseFloat((String) valuesC2.get(4)));
+
         return result;
     }
 
     protected String candlesLogMessage(Candle[] candles) {
-        StringBuilder message = new StringBuilder();
-
-        message.append(" firstCandle: ");
-        message.append((candles[0] == null) ? "FIRST CANDLE IS NULL" : candles[0].toString());
-        message.append(" secondCandle:");
-        message.append((candles[1] == null) ? "SECOND CANDLE IS NULL" : candles[1].toString());
-
-        return message.toString();
+        return ((candles[0] == null) ? " CANDLE IS NULL" : candles[0].toString()) +
+                ((candles[1] == null) ? " CANDLE IS NULL" : candles[1].toString()) +
+                ((candles[2] == null) ? " CANDLE IS NULL" : candles[2].toString());
     }
 
-    public abstract Mono<Candle[]> engulfingCandles(String symbol, Speed speed);
+    public abstract Mono engulfingCandles(String symbol, Speed speed);
 }

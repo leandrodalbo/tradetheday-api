@@ -21,7 +21,7 @@ public class FetchEngulfinEntries {
         this.krakenTrades = krakenTrades;
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */15 * * * *")
     public void fetchHighSpeedTrades() {
         logger.info("Fetching High Speed trades");
         binanceTrades.searchEntries(Speed.HIGH);
@@ -30,7 +30,7 @@ public class FetchEngulfinEntries {
     }
 
 
-    @Scheduled(cron = "0 0/15 * * * *")
+    @Scheduled(cron = "0 0/30 * * * *")
     public void fetchMediumSpeedTrades() {
         logger.info("Fetching Medium Speed trades");
         binanceTrades.searchEntries(Speed.MEDIUM);

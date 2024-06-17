@@ -60,6 +60,7 @@ kraken:
   private-uri-path: /0/private/AddOrder
   order-type: market
   symbols:
+    - DOTUSD
     - 1INCHUSD
     - AAVEUSD
     - ACAUSD
