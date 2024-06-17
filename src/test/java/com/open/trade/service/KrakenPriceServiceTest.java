@@ -23,7 +23,7 @@ public class KrakenPriceServiceTest {
     KrakenPriceService service;
 
     @Test
-    void willOpenAnewTrade() {
+    void willFetchTheLatestPrice() {
 
         when(krakenCall.latestPrice(any())).thenReturn(Mono.just(2.3));
 
