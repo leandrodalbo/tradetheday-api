@@ -61,6 +61,27 @@
 }
 ```
 
+## Check Trades by status
+
+- GET /opentrade/crypto/trades/{status}'
+
+### Response
+
+```json
+[
+  {
+    "id": 1,
+    "symbol": "string",
+    "volume": 0,
+    "profitprice": 0,
+    "stopprice": 0,
+    "status": "OPEN",
+    "ondatetime": 1718556594,
+    "version": 0
+  }
+]
+```
+
 ## Trading day summary
 
 - todo
