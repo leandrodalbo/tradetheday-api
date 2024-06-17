@@ -12,6 +12,6 @@ public class EngulfingCandleStrategy {
         Candle prev = candles[0];
         Candle current = candles[1];
 
-        return ((prev.open() > prev.close()) && (current.open() <= prev.close()) && current.close() >= prev.open());
+        return ((prev.open() > prev.close()) && (current.low() <= prev.close()) && current.close() >= prev.open());
     }
 }
