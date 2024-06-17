@@ -1,7 +1,11 @@
 package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
-import com.open.trade.data.*;
+import com.open.trade.data.OpenTrade;
+import com.open.trade.data.kraken.KrakenBuySell;
+import com.open.trade.data.kraken.KrakenOrderPost;
+import com.open.trade.data.kraken.KrakenOrderPostBody;
+import com.open.trade.data.kraken.KrakenPostResult;
 import com.open.trade.exception.KrakenOrderException;
 import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.model.Trade;
@@ -43,7 +47,8 @@ public class KrakenOrderService {
                                     trade.volume(),
                                     trade.profitprice(),
                                     trade.stopprice(),
-                                    TradeStatus.OPEN
+                                    TradeStatus.OPEN,
+                                    true
                             ));
                         }
                 );

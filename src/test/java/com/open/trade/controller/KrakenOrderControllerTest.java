@@ -32,7 +32,8 @@ public class KrakenOrderControllerTest {
                         0.2,
                         65000.0,
                         62000.3,
-                        TradeStatus.OPEN
+                        TradeStatus.OPEN,
+                        true
                 ))
         );
 

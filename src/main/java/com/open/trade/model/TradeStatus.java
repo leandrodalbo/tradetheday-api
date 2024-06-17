@@ -1,7 +1,7 @@
 package com.open.trade.model;
 
 public enum TradeStatus {
-    OPEN("OPEN"), CLOSED("CLOSE");
+    OPEN("OPEN"), CLOSED("CLOSED");
 
     private final String status;
 

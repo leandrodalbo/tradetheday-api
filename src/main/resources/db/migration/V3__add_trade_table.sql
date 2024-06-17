@@ -4,7 +4,9 @@ CREATE TABLE trade (
     volume            DECIMAL NOT NULL,
     profitprice       DECIMAL NOT NULL,
     stopprice         DECIMAL NOT NULL,
-    status            varchar(20) NOT NULL,
+    tradestatus       varchar(20) NOT NULL,
     ondatetime        BIGINT NOT NULL,
+    traderesult       varchar(20),
+    isakrakentrade    BOOLEAN,
     version           INTEGER NOT NULL
 );

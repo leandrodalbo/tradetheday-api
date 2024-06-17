@@ -2,8 +2,9 @@ package com.open.trade.exchangecall;
 
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
-import com.open.trade.data.KrakenOrderPost;
-import com.open.trade.data.KrakenPostResult;
+import com.open.trade.data.kraken.KrakenOrderPost;
+import com.open.trade.data.kraken.KrakenPostResult;
+import com.open.trade.exception.KrakenTickerException;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
 import org.slf4j.Logger;
@@ -18,7 +19,8 @@ import java.util.Map;
 
 @Component
 public class KrakenCall extends ExchangeCall {
-    private static final String ON_PATH = "/0/public/OHLC";
+    private static final String OHLC_URL = "/0/public/OHLC";
+    private static final String TICKER_URL = "0/public/Ticker";
     private static final String API_KEY_HEADER = "API-Key";
     private static final String API_SIGN_HEADER = "API-Sign";
     private final Logger logger = LoggerFactory.getLogger(KrakenCall.class);
@@ -27,11 +29,38 @@ public class KrakenCall extends ExchangeCall {
         super(clientProvider.krakenWebClient());
     }
 
+
+    public Mono<Object> latestPrice(String symbol) {
+        return client.get()
+                .uri(
+                        builder -> builder.path(TICKER_URL)
+                                .queryParam("pair", symbol)
+                                .build()
+                )
+                .retrieve()
+                .bodyToMono(KrakenResponse.class)
+                .map(it -> {
+                    if (it.error().length > 0) {
+                        logger.warn(String.format("Kraken ticker call failed for symbol %s", symbol));
+                        return Mono.error(KrakenTickerException::new);
+                    }
+
+                    Map data = (Map) it.result();
+                    Map pairMap = (Map) data.get(symbol);
+                    List info = (List) pairMap.get("c");
+                    return Double.valueOf((String) info.get(0));
+                })
+                .doOnError(e -> {
+                    logger.warn(e.getMessage());
+                    logger.warn(String.format("Kraken ticker call failed for symbol %s", symbol));
+                });
+    }
+
     @Override
     public Mono<Candle[]> engulfingCandles(String symbol, Speed speed) {
         return client.get()
                 .uri(
-                        builder -> builder.path(ON_PATH)
+                        builder -> builder.path(OHLC_URL)
                                 .queryParam("pair", symbol)
                                 .queryParam("interval", interval(speed))
                                 .queryParam("since", sinceParameter(speed))

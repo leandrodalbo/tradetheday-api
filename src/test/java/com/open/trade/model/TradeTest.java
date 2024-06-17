@@ -13,7 +13,8 @@ public class TradeTest {
                 0.1,
                 3.4,
                 3.2,
-                TradeStatus.OPEN
+                TradeStatus.OPEN,
+                false
         )).isExactlyInstanceOf(Trade.class);
     }
 

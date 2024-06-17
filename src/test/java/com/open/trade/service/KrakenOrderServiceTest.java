@@ -1,9 +1,9 @@
 package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
-import com.open.trade.data.KrakenBuySell;
-import com.open.trade.data.KrakenPostResult;
 import com.open.trade.data.OpenTrade;
+import com.open.trade.data.kraken.KrakenBuySell;
+import com.open.trade.data.kraken.KrakenPostResult;
 import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeStatus;
@@ -73,7 +73,7 @@ public class KrakenOrderServiceTest {
         ));
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> it.status().equals(TradeStatus.OPEN));
+                .thenConsumeWhile(it -> it.tradestatus().equals(TradeStatus.OPEN));
 
         verify(krakenCall, times(1)).postOrder(any());
     }

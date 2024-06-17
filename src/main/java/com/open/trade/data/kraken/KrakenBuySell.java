@@ -1,4 +1,4 @@
-package com.open.trade.data;
+package com.open.trade.data.kraken;
 
 public enum KrakenBuySell {
     BUY("buy"),

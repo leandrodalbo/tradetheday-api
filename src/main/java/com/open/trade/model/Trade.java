@@ -12,8 +12,10 @@ public record Trade(
         double volume,
         double profitprice,
         double stopprice,
-        TradeStatus status,
+        TradeStatus tradestatus,
         Long ondatetime,
+        TradeResult traderesult,
+        Boolean isakrakentrade,
         @Version
         Integer version
 ) {
@@ -21,15 +23,19 @@ public record Trade(
                            double volume,
                            double profitprice,
                            double stopprice,
-                           TradeStatus status
+                           TradeStatus tradestatus,
+                           Boolean isakrakentrade
     ) {
         return new Trade(null,
                 symbol,
                 volume,
                 profitprice,
                 stopprice,
-                status,
+                tradestatus,
                 Instant.now().getEpochSecond(),
-                null);
+                null,
+                isakrakentrade,
+                null
+        );
     }
 }

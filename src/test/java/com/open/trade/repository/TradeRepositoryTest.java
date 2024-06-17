@@ -1,5 +1,6 @@
 package com.open.trade.repository;
 
+import com.open.trade.model.TradeResult;
 import com.open.trade.model.TradeStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,15 @@ public class TradeRepositoryTest {
 
     @Test
     public void willFindOpenTrades() {
-        StepVerifier.create(repository.findByStatus(TradeStatus.OPEN))
-                .expectNextMatches(it -> it.status().equals(TradeStatus.OPEN))
+        StepVerifier.create(repository.findByTradestatus(TradeStatus.OPEN))
+                .expectNextMatches(it -> TradeStatus.OPEN.equals(it.tradestatus()))
+                .verifyComplete();
+    }
+
+    @Test
+    public void willFindSuccessfulTrades() {
+        StepVerifier.create(repository.findByTraderesult(TradeResult.SUCCESS))
+                .expectNextMatches(it -> TradeResult.SUCCESS.equals(it.traderesult()))
                 .verifyComplete();
     }
 

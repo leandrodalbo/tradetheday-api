@@ -26,18 +26,16 @@ public class TradesControllerTest {
     @Test
     void shouldGETEngulfingResultsBySpeed() {
 
-        given(service.findByStatus(any())).willReturn(
+        given(service.findTrades(any(), any(), any())).willReturn(
                 Flux.just(
-                        Trade.of("SOLUSDT", 2, 57.3, 55, TradeStatus.OPEN)
+                        Trade.of("SOLUSDT", 2, 57.3, 55, TradeStatus.OPEN, true)
                 )
         );
 
         client.get()
-                .uri("/opentrade/crypto/trades/OPEN")
+                .uri("/opentrade/crypto/trades?status=OPEN&result=SUCCESS&today=true")
                 .exchange()
                 .expectStatus().is2xxSuccessful();
-
-
     }
 }
 

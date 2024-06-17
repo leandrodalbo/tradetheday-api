@@ -61,30 +61,28 @@
 }
 ```
 
-## Check Trades by status
+## Trades Search
 
-- GET /opentrade/crypto/trades/{status}'
+- GET /opentrade/crypto/trades?status=OPEN&result=SUCCESS&today=false'
 
 ### Response
 
 ```json
 [
   {
-    "id": 1,
+    "id": 0,
     "symbol": "string",
     "volume": 0,
     "profitprice": 0,
     "stopprice": 0,
-    "status": "OPEN",
-    "ondatetime": 1718556594,
+    "tradestatus": "OPEN",
+    "ondatetime": 0,
+    "traderesult": "SUCCESS",
+    "isakrakentrade": true,
     "version": 0
   }
 ]
 ```
-
-## Trading day summary
-
-- todo
 
 ### Postgres db Container
 

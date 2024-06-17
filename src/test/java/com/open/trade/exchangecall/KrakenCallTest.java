@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
-import com.open.trade.data.KrakenOrderPost;
-import com.open.trade.data.KrakenOrderPostBody;
-import com.open.trade.data.KrakenPostResult;
+import com.open.trade.data.kraken.KrakenOrderPost;
+import com.open.trade.data.kraken.KrakenOrderPostBody;
+import com.open.trade.data.kraken.KrakenPostResult;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
 import okhttp3.mockwebserver.MockResponse;
@@ -109,7 +109,7 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<KrakenPostResult> candles = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
+        Mono<KrakenPostResult> result = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
                 System.currentTimeMillis(),
                 "market",
                 "buy",
@@ -117,7 +117,7 @@ public class KrakenCallTest {
                 "SOLUSD"
         )));
 
-        StepVerifier.create(candles)
+        StepVerifier.create(result)
                 .expectNextMatches(KrakenPostResult::success)
                 .verifyComplete();
     }
@@ -132,7 +132,7 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<KrakenPostResult> candles = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
+        Mono<KrakenPostResult> result = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
                 System.currentTimeMillis(),
                 "market",
                 "buy",
@@ -140,9 +140,47 @@ public class KrakenCallTest {
                 "SOLUSD"
         )));
 
-        StepVerifier.create(candles)
+        StepVerifier.create(result)
                 .expectNextMatches(it -> !it.success())
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldFetchTheLatestPrice() throws JsonProcessingException {
+        var mockResponse = new MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(mapper.writeValueAsString(
+                        new KrakenResponse(new String[0], Map.of(
+                                "BTCUSD",
+                                Map.of(
+                                        "c", new String[]{"142.750000", "0.44623432"}
+                                ))
+                        )));
+
+        mockWebServer.enqueue(mockResponse);
+
+        Mono<Object> result = krakenCall.latestPrice("BTCUSD");
+
+        StepVerifier.create(result)
+                .expectNextMatches(it -> it.equals(142.750000))
+                .verifyComplete();
+    }
+
+
+    @Test
+    void shouldHandleTickerError() throws JsonProcessingException {
+        var mockResponse = new MockResponse()
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(mapper.writeValueAsString(
+                        new KrakenResponse(new String[]{"failed"}, null)
+                ));
+
+        mockWebServer.enqueue(mockResponse);
+
+        Mono<Object> result = krakenCall.latestPrice("BTCUSD");
+
+        StepVerifier.create(result)
+                .expectError();
     }
 
 }
