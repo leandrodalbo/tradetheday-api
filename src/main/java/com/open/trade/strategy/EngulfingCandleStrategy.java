@@ -11,11 +11,11 @@ public class EngulfingCandleStrategy {
 
         Candle preprev = candles[0];
         Candle prev = candles[1];
-        Candle current = candles[2];
+        Candle latest = candles[2];
 
-        if (((preprev.open() > preprev.close()) && (prev.low() <= preprev.close()) && prev.close() >= preprev.open()))
+        if (preprev.close() < preprev.open() && prev.close() > prev.open() && prev.open() <= preprev.close() && prev.close() >= preprev.open())
             return true;
 
-        return ((prev.open() > prev.close()) && (current.low() <= prev.close()) && current.close() >= prev.open());
+        return (prev.close() < prev.open() && latest.close() > latest.open() && latest.open() <= prev.close() && latest.close() >= prev.open());
     }
 }
