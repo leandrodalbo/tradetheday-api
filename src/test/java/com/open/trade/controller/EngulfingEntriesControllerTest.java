@@ -10,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @WebFluxTest(EngulfingEntriesController.class)
@@ -24,9 +23,9 @@ public class EngulfingEntriesControllerTest {
 
 
     @Test
-    void shouldGETEngulfingResultsBySpeed() {
+    void shouldGETEntries() {
 
-        given(service.findTodayEngulfingBySpeed(any())).willReturn(
+        given(service.findLatestEntries()).willReturn(
                 Flux.just(Opportunity.of(
                         "BTCUSDT",
                         Speed.HIGH,
@@ -34,7 +33,6 @@ public class EngulfingEntriesControllerTest {
                         3000.00F,
                         3000.00F,
                         3000.00F,
-                        Speed.HIGH,
                         false,
                         0.0f,
                         0.0f,
@@ -43,11 +41,9 @@ public class EngulfingEntriesControllerTest {
         );
 
         client.get()
-                .uri("/opentrade/crypto/engulfing/HIGH")
+                .uri("/opentrade/crypto/engulfing/entries")
                 .exchange()
                 .expectStatus().is2xxSuccessful();
-
-
     }
 }
 

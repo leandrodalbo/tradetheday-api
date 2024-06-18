@@ -42,7 +42,7 @@ public class EngulfingBinanceTradesTest {
     @Test
     void shouldUpdateOpportunities() {
         when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
-        when(repository.findBySymbol(any())).thenReturn(Mono.just(
+        when(repository.findById(anyString())).thenReturn(Mono.just(
                 Opportunity.of(
                         "BTCUSDT",
                         Speed.HIGH,
@@ -50,7 +50,6 @@ public class EngulfingBinanceTradesTest {
                         3000.00F,
                         3000.00F,
                         3000.00F,
-                        Speed.HIGH,
                         false,
                         0.0f,
                         0.0f,
@@ -71,14 +70,14 @@ public class EngulfingBinanceTradesTest {
 
         verify(props, times(1)).symbols();
         verify(repository, times(1)).save(any());
-        verify(repository, times(1)).findBySymbol(any());
+        verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).engulfingCandles(any(), any());
     }
 
     @Test
     void shouldSaveNewOpportunities() {
         when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
-        when(repository.findBySymbol(any())).thenReturn(Mono.error(new Exception("FAILED")));
+        when(repository.findById(anyString())).thenReturn(Mono.empty());
         when(repository.save(any())).thenReturn(Mono.empty());
         when(binanceCall.engulfingCandles(any(), any())).thenReturn(
                 Mono.just(new Candle[]{
@@ -93,7 +92,7 @@ public class EngulfingBinanceTradesTest {
 
         verify(props, times(1)).symbols();
         verify(repository, times(1)).save(any());
-        verify(repository, times(1)).findBySymbol(any());
+        verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).engulfingCandles(any(), any());
     }
 }

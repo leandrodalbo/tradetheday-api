@@ -15,7 +15,6 @@ public class OpportunityTest {
                 3000.00F,
                 3000.00F,
                 3000.00F,
-                Speed.HIGH,
                 false,
                 0.0f,
                 0.0f,
@@ -23,4 +22,12 @@ public class OpportunityTest {
         )).isExactlyInstanceOf(Opportunity.class);
     }
 
+    @Test
+    void willGenerateSymbolAndSpeedValue() {
+        assertThat(Opportunity.generateSimbolSpeed(
+                "BTCUSDT",
+                Speed.HIGH
+
+        )).isEqualTo("BTCUSDT-" + Speed.HIGH);
+    }
 }

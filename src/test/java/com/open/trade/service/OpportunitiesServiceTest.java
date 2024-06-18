@@ -14,7 +14,6 @@ import reactor.test.StepVerifier;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,8 +27,8 @@ public class OpportunitiesServiceTest {
     OpportunitiesService service;
 
     @Test
-    void findBySpeed() {
-        when(repository.findEngulfingBySpeed(any())).thenReturn(
+    void findLatestEntries() {
+        when(repository.findAll()).thenReturn(
                 Flux.just(Opportunity.of(
                                 "BTCUSDT",
                                 Speed.HIGH,
@@ -37,35 +36,31 @@ public class OpportunitiesServiceTest {
                                 3000.00F,
                                 3000.00F,
                                 3000.00F,
-                                Speed.HIGH,
                                 false,
                                 0.0f,
                                 0.0f,
                                 0.0f
                         ),
-                        new Opportunity(23123L,
-                                "BTCUSDT",
-                                Speed.HIGH,
+                        new Opportunity(
+                                Opportunity.generateSimbolSpeed("BTCUSDT", Speed.HIGH),
                                 true,
                                 3000.00F,
                                 3000.00F,
                                 3000.00F,
-                                Speed.LOW,
                                 false,
                                 0.0f,
                                 0.0f,
                                 0.0f,
-                                Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond(),
+                                Instant.now().minus(2, ChronoUnit.DAYS).getEpochSecond(),
                                 0
-
                         ))
         );
 
-        Flux<Opportunity> result = service.findTodayEngulfingBySpeed(Speed.HIGH);
+        Flux<Opportunity> result = service.findLatestEntries();
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> it.binancespeed().equals(Speed.HIGH) && it.krakenspeed().equals(Speed.HIGH) && it.ondatetime() > Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond());
+                .thenConsumeWhile(it -> it.ondatetime() > Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond());
 
-        verify(repository, times(1)).findEngulfingBySpeed(any());
+        verify(repository, times(1)).findAll();
     }
 }

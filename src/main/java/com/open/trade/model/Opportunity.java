@@ -11,11 +11,7 @@ import java.time.Instant;
 public record Opportunity(
 
         @Id
-        Long id,
-
-        String symbol,
-
-        Speed binancespeed,
+        String symbolspeed,
 
         Boolean binanceengulfing,
 
@@ -24,8 +20,6 @@ public record Opportunity(
         Float binancestop,
 
         Float binanceprofit,
-
-        Speed krakenspeed,
 
         Boolean krakenengulfing,
 
@@ -43,26 +37,22 @@ public record Opportunity(
 
     public static Opportunity of(
             String symbol,
-            Speed binanceSpeed,
+            Speed speed,
             Boolean binanceEngulfing,
             Float binancePrice,
             Float binanceStop,
             Float binanceProfit,
-            Speed krakenSpeed,
             Boolean krakenEngulfing,
             Float krakenPrice,
             Float krakenStop,
             Float krakenProfit
     ) {
         return new Opportunity(
-                null,
-                symbol,
-                binanceSpeed,
+                generateSimbolSpeed(symbol, speed),
                 binanceEngulfing,
                 binancePrice,
                 binanceStop,
                 binanceProfit,
-                krakenSpeed,
                 krakenEngulfing,
                 krakenPrice,
                 krakenStop,
@@ -70,5 +60,9 @@ public record Opportunity(
                 Instant.now().getEpochSecond(),
                 null
         );
+    }
+
+    public static String generateSimbolSpeed(String symbol, Speed speed) {
+        return (symbol + "-" + speed.toString());
     }
 }

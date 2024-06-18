@@ -10,7 +10,10 @@ import com.open.trade.strategy.EngulfingCandleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+
+import java.time.Instant;
 
 @Service
 public class EngulfingKrakenTrades implements FetchNewTrades {
@@ -36,49 +39,40 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
         });
     }
 
+    @Transactional
     private void saveInfo(String symbol, Mono values, Speed speed) {
         values.subscribe(
                 it -> {
+
                     Candle[] candles = (Candle[]) it;
+
                     if (strategy.isEngulfing(candles)) {
-
-                        repository.findBySymbol(symbol)
-                                .doOnError(e -> {
-                                    logger.warn(e.getMessage());
-
-                                    Candle c = candles[2];
-
-                                    repository.save(Opportunity.of(
-                                            symbol,
-                                            speed,
-                                            false,
-                                            0f,
-                                            0f,
-                                            0f,
-                                            speed,
-                                            true,
-                                            c.close(),
-                                            c.close() * props.stop(),
-                                            c.close() * props.profit()
-                                    ));
-                                })
-                                .subscribe(opportunity -> {
-
-                                    Candle c = candles[2];
-                                    repository.save(Opportunity.of(
-                                            symbol,
-                                            speed,
-                                            opportunity.binanceengulfing(),
-                                            opportunity.binanceprice(),
-                                            opportunity.binancestop(),
-                                            opportunity.binanceprofit(),
-                                            speed,
-                                            true,
-                                            c.close(),
-                                            c.close() * props.stop(),
-                                            c.close() * props.profit()
-                                    ));
-                                });
+                        repository.findById(Opportunity.generateSimbolSpeed(symbol, speed))
+                                .defaultIfEmpty(Opportunity.of(
+                                        symbol,
+                                        speed,
+                                        false,
+                                        0f,
+                                        0f,
+                                        0f,
+                                        true,
+                                        candles[2].close(),
+                                        candles[2].close() * props.stop(),
+                                        candles[2].close() * props.profit()
+                                ))
+                                .flatMap(opportunity -> repository.save(new Opportunity(
+                                        opportunity.symbolspeed(),
+                                        opportunity.binanceengulfing(),
+                                        opportunity.binanceprice(),
+                                        opportunity.binancestop(),
+                                        opportunity.binanceprofit(),
+                                        true,
+                                        candles[2].close(),
+                                        candles[2].close() * props.stop(),
+                                        candles[2].close() * props.profit(),
+                                        Instant.now().getEpochSecond(),
+                                        opportunity.version()
+                                ))).subscribe();
                     }
                 }
         );

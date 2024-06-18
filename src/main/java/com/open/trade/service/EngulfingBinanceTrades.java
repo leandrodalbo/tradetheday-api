@@ -10,7 +10,10 @@ import com.open.trade.strategy.EngulfingCandleStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+
+import java.time.Instant;
 
 @Service
 public class EngulfingBinanceTrades implements FetchNewTrades {
@@ -36,45 +39,42 @@ public class EngulfingBinanceTrades implements FetchNewTrades {
         });
     }
 
+    @Transactional
     private void saveInfo(String symbol, Mono values, Speed speed) {
         values.subscribe(it -> {
-            Candle[] candles = (Candle[]) it;
-            if (strategy.isEngulfing(candles)) {
 
-                repository.findBySymbol(symbol)
-                        .doOnError(e -> {
-                            logger.warn(e.getMessage());
-                            Candle c = candles[2];
-                            repository.save(Opportunity.of(
-                                    symbol,
-                                    speed,
-                                    true,
-                                    c.close(),
-                                    c.close() * props.stop(),
-                                    c.close() * props.profit(),
-                                    speed,
-                                    false,
-                                    0f,
-                                    0f,
-                                    0f
-                            ));
-                        })
-                        .subscribe(opportunity -> {
-                            Candle c = candles[2];
-                            repository.save(Opportunity.of(
-                                    symbol,
-                                    speed,
-                                    true,
-                                    c.close(),
-                                    c.close() * props.stop(),
-                                    c.close() * props.profit(),
-                                    speed,
-                                    opportunity.krakenengulfing(),
-                                    opportunity.krakenprice(),
-                                    opportunity.krakenstop(),
-                                    opportunity.krakenprofit()
-                            ));
-                        });
+            Candle[] candles = (Candle[]) it;
+
+            if (strategy.isEngulfing(candles)) {
+                repository.findById(Opportunity.generateSimbolSpeed(symbol, speed))
+                        .defaultIfEmpty(
+                                Opportunity.of(
+                                        symbol,
+                                        speed,
+                                        true,
+                                        candles[2].close(),
+                                        candles[2].close() * props.stop(),
+                                        candles[2].close() * props.profit(),
+                                        false,
+                                        0f,
+                                        0f,
+                                        0f
+                                )
+                        )
+                        .flatMap(opportunity ->
+                                repository.save(new Opportunity(
+                                        opportunity.symbolspeed(),
+                                        true,
+                                        candles[2].close(),
+                                        candles[2].close() * props.stop(),
+                                        candles[2].close() * props.profit(),
+                                        opportunity.krakenengulfing(),
+                                        opportunity.krakenprice(),
+                                        opportunity.krakenstop(),
+                                        opportunity.krakenprofit(),
+                                        Instant.now().getEpochSecond(),
+                                        opportunity.version()
+                                ))).subscribe();
             }
         });
     }
