@@ -7,25 +7,23 @@
 
 ## Check Trading entries
 
-- GET /opentrade/crypto/engulfing/{speed}
+- GET /opentrade/crypto/engulfing/entries
 
 ### Response
 
 ```json
 [
   {
-    "id": 0,
-    "symbol": "BTCUSDT",
-    "binancespeed": "HIGH",
-    "binanceengulfing": true,
-    "binanceprice": 78000.0,
-    "binancestop": 77800.45,
-    "binanceprofit": 79900.43,
-    "krakenspeed": "HIGH",
-    "krakenengulfing": false,
-    "krakenprice": 0,
-    "krakenstop": 0,
-    "krakenprofit": 0,
+    "symbolspeed": "ZGBPZUSD-HIGH",
+    "binanceengulfing": false,
+    "binanceprice": 0,
+    "binancestop": 0,
+    "binanceprofit": 0,
+    "krakenengulfing": true,
+    "krakenprice": 1.26996,
+    "krakenstop": 1.24456,
+    "krakenprofit": 1.29536,
+    "ondatetime": 1718716501,
     "version": 0
   }
 ]
