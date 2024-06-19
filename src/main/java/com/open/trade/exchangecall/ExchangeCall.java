@@ -46,11 +46,5 @@ public abstract class ExchangeCall {
         return result;
     }
 
-    protected String engulfingLog(Candle[] candles) {
-        return ((candles[0] == null) ? " Candle is null" : candles[0].toString()) +
-                ((candles[1] == null) ? " Candle is null" : candles[1].toString()) +
-                ((candles[2] == null) ? " Candle is null" : candles[2].toString());
-    }
-
     public abstract Mono<Candle[]> engulfingCandles(String symbol, Speed speed);
 }
