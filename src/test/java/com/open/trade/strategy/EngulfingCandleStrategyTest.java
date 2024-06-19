@@ -1,6 +1,6 @@
 package com.open.trade.strategy;
 
-import com.open.trade.data.Candle;
+import com.open.trade.exchanging.Candle;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,6 +1,6 @@
 package com.open.trade.scheduled;
 
-import com.open.trade.data.kraken.KrakenBuySell;
+import com.open.trade.exchanging.kraken.KrakenBuySell;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeResult;
 import com.open.trade.model.TradeStatus;
@@ -28,7 +28,7 @@ public class HandleKrakenOpenTrades {
         this.tradeRepository = tradeRepository;
     }
 
-    @Scheduled(cron = "0 */1 * * * *")
+    @Scheduled(cron = "0 */3 * * * *")
     public void handleOpenTrades() {
         logger.info("Checking Open Trades");
 
@@ -56,7 +56,7 @@ public class HandleKrakenOpenTrades {
     }
 
     private void closeTrade(Trade trade, TradeResult result) {
-        orderService.postOrder(trade.symbol(), trade.volume(), trade.price(), KrakenBuySell.SELL)
+        orderService.postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL)
                 .subscribe(closing -> {
                     if (closing.success()) {
                         tradeRepository.save(new Trade(

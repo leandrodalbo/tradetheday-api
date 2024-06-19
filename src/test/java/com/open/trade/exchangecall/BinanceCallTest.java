@@ -3,7 +3,7 @@ package com.open.trade.exchangecall;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.trade.configuration.WebClientProvider;
-import com.open.trade.data.Candle;
+import com.open.trade.exchanging.Candle;
 import com.open.trade.model.Speed;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

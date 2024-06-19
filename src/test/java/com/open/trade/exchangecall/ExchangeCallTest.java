@@ -1,6 +1,6 @@
 package com.open.trade.exchangecall;
 
-import com.open.trade.data.Candle;
+import com.open.trade.exchanging.Candle;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

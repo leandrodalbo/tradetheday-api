@@ -3,10 +3,10 @@ package com.open.trade.exchangecall;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.trade.configuration.WebClientProvider;
-import com.open.trade.data.Candle;
-import com.open.trade.data.kraken.KrakenOrderPost;
-import com.open.trade.data.kraken.KrakenPostResult;
-import com.open.trade.exchangecall.exchange.KrakenResponse;
+import com.open.trade.exchanging.Candle;
+import com.open.trade.exchanging.kraken.KrakenOrderPost;
+import com.open.trade.exchanging.kraken.KrakenPostResult;
+import com.open.trade.exchanging.kraken.KrakenResponse;
 import com.open.trade.model.Speed;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -155,7 +155,7 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<Object> result = krakenCall.latestPrice("BTCUSD");
+        Mono<Double> result = krakenCall.latestPrice("BTCUSD");
 
         StepVerifier.create(result)
                 .expectNextMatches(it -> it.equals(142.750000))
@@ -173,7 +173,7 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<Object> result = krakenCall.latestPrice("BTCUSD");
+        Mono<Double> result = krakenCall.latestPrice("BTCUSD");
 
         StepVerifier.create(result)
                 .expectError();

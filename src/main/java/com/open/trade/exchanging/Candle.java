@@ -1,4 +1,4 @@
-package com.open.trade.data;
+package com.open.trade.exchanging;
 
 public record Candle(
         Float open,

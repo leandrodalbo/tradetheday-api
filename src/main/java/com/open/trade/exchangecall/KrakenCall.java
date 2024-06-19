@@ -1,11 +1,10 @@
 package com.open.trade.exchangecall;
 
 import com.open.trade.configuration.WebClientProvider;
-import com.open.trade.data.kraken.KrakenOrderPost;
-import com.open.trade.data.kraken.KrakenPostResult;
-import com.open.trade.exception.KrakenEngulfingException;
-import com.open.trade.exception.KrakenTickerException;
-import com.open.trade.exchangecall.exchange.KrakenResponse;
+import com.open.trade.exchanging.Candle;
+import com.open.trade.exchanging.kraken.KrakenOrderPost;
+import com.open.trade.exchanging.kraken.KrakenPostResult;
+import com.open.trade.exchanging.kraken.KrakenResponse;
 import com.open.trade.model.Speed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,47 +23,37 @@ public class KrakenCall extends ExchangeCall {
     private static final String TICKER_URL = "0/public/Ticker";
     private static final String API_KEY_HEADER = "API-Key";
     private static final String API_SIGN_HEADER = "API-Sign";
+    private static final String POST_CONTENT_TYPE_HEADER = "Content-Type";
+    private static final String POST_CONTENT_TYPE_HEADER_VALUE = "application/x-www-form-urlencoded";
+
     private final Logger logger = LoggerFactory.getLogger(KrakenCall.class);
 
     public KrakenCall(WebClientProvider clientProvider) {
         super(clientProvider.krakenWebClient());
     }
 
-    public Mono<Object> latestPrice(String symbol) {
+    public Mono<Double> latestPrice(String symbol) {
         return client.get()
-                .uri(
-                        builder -> builder.path(TICKER_URL)
-                                .queryParam("pair", symbol)
-                                .build()
-                )
+                .uri(builder -> builder.path(TICKER_URL)
+                        .queryParam("pair", symbol)
+                        .build())
                 .retrieve()
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
                     if (it.error().length > 0) {
                         logger.warn(String.format("Kraken ticker call failed for symbol %s", symbol));
-                        return Mono.error(KrakenTickerException::new);
                     }
 
                     Map data = (Map) it.result();
-
                     Map pairMap = (Map) data.get(symbol);
-
-                    if (pairMap == null) {
-                        String[] symbols = symbol.split("USD");
-                        pairMap = (Map) data.get("X" + symbols[0] + "ZUSD");
-                    }
-
                     List info = (List) pairMap.get("c");
                     return Double.valueOf((String) info.get(0));
                 })
-                .doOnError(e -> {
-                    logger.warn(e.getMessage());
-                    logger.warn(String.format("Kraken ticker call failed for symbol %s", symbol));
-                });
+                .doOnError(e -> logger.warn(e.getMessage()));
     }
 
     @Override
-    public Mono engulfingCandles(String symbol, Speed speed) {
+    public Mono<Candle[]> engulfingCandles(String symbol, Speed speed) {
         return client.get()
                 .uri(
                         builder -> builder.path(OHLC_URL)
@@ -77,46 +66,34 @@ public class KrakenCall extends ExchangeCall {
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
                     if (it.error().length > 0) {
-                        return Mono.error(new KrakenEngulfingException());
+                        logger.warn(String.format("Kraken engulfing candles fetch for symbol: %s at speed %s", symbol, speed));
                     }
 
                     Map data = (Map) it.result();
                     return engulfingToArray((List) data.get(symbol));
 
                 })
-                .doOnError(e -> {
-                    logger.warn(e.getMessage());
-                    logger.warn(String.format("Kraken call failed fetching symbol: %s at speedL %s", symbol, speed));
-                });
+                .doOnError(e -> logger.warn(e.getMessage()));
     }
 
     public Mono<KrakenPostResult> postOrder(KrakenOrderPost orderPost) {
         return client.post()
-                .uri(uriBuilder -> uriBuilder.path(PRIVATE_URL).build()
-                )
+                .uri(uriBuilder -> uriBuilder.path(PRIVATE_URL).build())
                 .header(API_KEY_HEADER, orderPost.apiKey())
                 .header(API_SIGN_HEADER, orderPost.signature())
-                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header(POST_CONTENT_TYPE_HEADER, POST_CONTENT_TYPE_HEADER_VALUE)
                 .bodyValue(orderPost.data())
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(it -> {
-
                     Map response = it;
-
                     if (!((List) response.get("error")).isEmpty()) {
-                        logger.warn("Kraken order failed");
                         return new KrakenPostResult(false, "Kraken order failed");
                     }
-
-                    logger.info(String.format("Order Created %s", orderPost.data()));
-                    return new KrakenPostResult(true, String.format("Order Created %s", orderPost.data()));
+                    return new KrakenPostResult(true, String.format("Kraken Order Created %s", orderPost.data()));
 
                 })
-                .doOnError(e -> {
-                    logger.warn(e.getMessage());
-                    logger.warn(String.format(String.format("Kraken post failed: %", orderPost)));
-                });
+                .doOnError(e -> logger.warn(e.getMessage()));
     }
 
     private long sinceParameter(Speed speed) {

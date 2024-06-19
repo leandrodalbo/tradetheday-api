@@ -1,16 +1,14 @@
 package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
-import com.open.trade.data.OpenTrade;
-import com.open.trade.data.kraken.KrakenBuySell;
-import com.open.trade.data.kraken.KrakenOrderPost;
-import com.open.trade.data.kraken.KrakenPostResult;
 import com.open.trade.exchangecall.KrakenCall;
+import com.open.trade.exchanging.OpenTrade;
+import com.open.trade.exchanging.kraken.KrakenBuySell;
+import com.open.trade.exchanging.kraken.KrakenOrderPost;
+import com.open.trade.exchanging.kraken.KrakenPostResult;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeStatus;
 import com.open.trade.repository.TradeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -27,12 +25,11 @@ import java.util.Map;
 
 @Service
 public class KrakenOrderService {
-    private static final String PATH = "/0/private/AddOrder";
+    private static final String ADD_ORDER_PATH = "/0/private/AddOrder";
     private static final String SHA_256 = "SHA-256";
-    private static final String SHA_512 = "HmacSHA512";
+    private static final String HMAC_SHA_512 = "HmacSHA512";
     private static final String ORDER_TYPE = "market";
 
-    private final Logger logger = LoggerFactory.getLogger(KrakenOrderService.class);
     private final KrakenProps props;
     private final KrakenCall krakenCall;
     private final TradeRepository repository;
@@ -43,12 +40,17 @@ public class KrakenOrderService {
         this.repository = repository;
     }
 
-    public Mono newTrade(OpenTrade trade) {
-        return postOrder(trade.symbol(), trade.volume(), trade.price(), KrakenBuySell.BUY)
+    public Mono<Object> newTrade(OpenTrade trade) {
+
+        if (!props.symbols().contains(trade.symbol())) {
+            return Mono.just("Invalid Kraken symbol");
+        }
+
+        return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY)
                 .flatMap(it ->
                         {
                             if (!it.success()) {
-                                return Mono.just("Order Failed");
+                                return Mono.just(it.message());
                             }
                             return repository.save(Trade.of(
                                     trade.symbol(),
@@ -63,7 +65,7 @@ public class KrakenOrderService {
                 );
     }
 
-    public Mono<KrakenPostResult> postOrder(String symbol, double volume, double price, KrakenBuySell buySell) {
+    public Mono<KrakenPostResult> postOrder(String symbol, double volume, KrakenBuySell buySell) {
         String nonce = String.valueOf(System.currentTimeMillis());
         Map<String, String> params = new HashMap<>();
 
@@ -73,16 +75,17 @@ public class KrakenOrderService {
         params.put("type", buySell.name().toLowerCase());
         params.put("volume", String.valueOf(volume));
 
+        String data = postingData(params);
+
         try {
 
             return krakenCall.postOrder(new KrakenOrderPost(
                     props.apiKey(),
-                    signature(props.apiSecret(), postingData(params), nonce, PATH),
-                    postingData(params)
+                    signature(props.apiSecret(), data, nonce, ADD_ORDER_PATH),
+                    data
             ));
 
         } catch (Exception e) {
-            logger.warn(e.getMessage());
             return Mono.just(new KrakenPostResult(false, e.getMessage()));
         }
     }
@@ -90,15 +93,15 @@ public class KrakenOrderService {
     public String signature(String privateKey, String encodedPayload, String nonce, String endpointPath) throws NoSuchAlgorithmException, InvalidKeyException {
         final byte[] pathInBytes = endpointPath.getBytes(StandardCharsets.UTF_8);
         final String noncePrependedToPostData = nonce + encodedPayload;
-        final MessageDigest md = MessageDigest.getInstance("SHA-256");
+        final MessageDigest md = MessageDigest.getInstance(SHA_256);
 
         md.update(noncePrependedToPostData.getBytes(StandardCharsets.UTF_8));
 
         final byte[] messageHash = md.digest();
         final byte[] base64DecodedSecret = Base64.getDecoder().decode(privateKey);
-        final SecretKeySpec keyspec = new SecretKeySpec(base64DecodedSecret, "HmacSHA512");
+        final SecretKeySpec keyspec = new SecretKeySpec(base64DecodedSecret, HMAC_SHA_512);
 
-        Mac mac = Mac.getInstance("HmacSHA512");
+        Mac mac = Mac.getInstance(HMAC_SHA_512);
         mac.init(keyspec);
 
         mac.reset();
@@ -109,10 +112,10 @@ public class KrakenOrderService {
     }
 
 
-    private String postingData(Map<String, String> data) {
+    public String postingData(Map<String, String> data) {
         final StringBuilder postData = new StringBuilder();
         for (final Map.Entry<String, String> param : data.entrySet()) {
-            if (postData.length() > 0) {
+            if (!postData.isEmpty()) {
                 postData.append("&");
             }
             postData.append(param.getKey());

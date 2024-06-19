@@ -1,8 +1,8 @@
 package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
-import com.open.trade.data.Candle;
 import com.open.trade.exchangecall.KrakenCall;
+import com.open.trade.exchanging.Candle;
 import com.open.trade.model.Opportunity;
 import com.open.trade.model.Speed;
 import com.open.trade.repository.OpportunityRepository;
@@ -40,13 +40,10 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
     }
 
     @Transactional
-    private void saveInfo(String symbol, Mono values, Speed speed) {
+    private void saveInfo(String symbol, Mono<Candle[]> values, Speed speed) {
         values.subscribe(
                 it -> {
-
-                    Candle[] candles = (Candle[]) it;
-
-                    if (strategy.isEngulfing(candles)) {
+                    if (strategy.isEngulfing(it)) {
                         repository.findById(Opportunity.generateSimbolSpeed(symbol, speed))
                                 .defaultIfEmpty(Opportunity.of(
                                         symbol,
@@ -56,9 +53,9 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
                                         0f,
                                         0f,
                                         true,
-                                        candles[2].close(),
-                                        candles[2].close() * props.stop(),
-                                        candles[2].close() * props.profit()
+                                        it[2].close(),
+                                        it[2].close() * props.stop(),
+                                        it[2].close() * props.profit()
                                 ))
                                 .flatMap(opportunity -> repository.save(new Opportunity(
                                         opportunity.symbolspeed(),
@@ -67,9 +64,9 @@ public class EngulfingKrakenTrades implements FetchNewTrades {
                                         opportunity.binancestop(),
                                         opportunity.binanceprofit(),
                                         true,
-                                        candles[2].close(),
-                                        candles[2].close() * props.stop(),
-                                        candles[2].close() * props.profit(),
+                                        it[2].close(),
+                                        it[2].close() * props.stop(),
+                                        it[2].close() * props.profit(),
                                         Instant.now().getEpochSecond(),
                                         opportunity.version()
                                 ))).subscribe();

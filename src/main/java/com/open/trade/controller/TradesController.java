@@ -23,7 +23,7 @@ public class TradesController {
     }
 
     @GetMapping("/trades")
-    public Flux<Trade> findByTrades(@RequestParam Optional<TradeStatus> status, @RequestParam Optional<TradeResult> result, @RequestParam Optional<Boolean> today) {
+    public Flux<Trade> findTrades(@RequestParam Optional<TradeStatus> status, @RequestParam Optional<TradeResult> result, @RequestParam Optional<Boolean> today) {
         return service.findTrades(status, result, today);
     }
 }

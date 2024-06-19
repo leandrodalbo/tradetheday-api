@@ -1,4 +1,4 @@
-package com.open.trade.data.kraken;
+package com.open.trade.exchanging.kraken;
 
 public record KrakenPostResult(
         Boolean success,

@@ -1,6 +1,6 @@
 package com.open.trade.strategy;
 
-import com.open.trade.data.Candle;
+import com.open.trade.exchanging.Candle;
 import org.springframework.stereotype.Component;
 
 @Component

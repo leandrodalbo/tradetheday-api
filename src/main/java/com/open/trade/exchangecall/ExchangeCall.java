@@ -1,6 +1,6 @@
 package com.open.trade.exchangecall;
 
-import com.open.trade.data.Candle;
+import com.open.trade.exchanging.Candle;
 import com.open.trade.model.Speed;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -46,11 +46,11 @@ public abstract class ExchangeCall {
         return result;
     }
 
-    protected String candlesLogMessage(Candle[] candles) {
-        return ((candles[0] == null) ? " CANDLE IS NULL" : candles[0].toString()) +
-                ((candles[1] == null) ? " CANDLE IS NULL" : candles[1].toString()) +
-                ((candles[2] == null) ? " CANDLE IS NULL" : candles[2].toString());
+    protected String engulfingLog(Candle[] candles) {
+        return ((candles[0] == null) ? " Candle is null" : candles[0].toString()) +
+                ((candles[1] == null) ? " Candle is null" : candles[1].toString()) +
+                ((candles[2] == null) ? " Candle is null" : candles[2].toString());
     }
 
-    public abstract Mono engulfingCandles(String symbol, Speed speed);
+    public abstract Mono<Candle[]> engulfingCandles(String symbol, Speed speed);
 }
