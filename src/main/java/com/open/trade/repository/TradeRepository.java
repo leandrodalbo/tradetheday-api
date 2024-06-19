@@ -12,4 +12,6 @@ public interface TradeRepository extends ReactiveCrudRepository<Trade, Long> {
     Flux<Trade> findByTradestatus(TradeStatus tradestatus);
 
     Flux<Trade> findByTraderesult(TradeResult traderesult);
+
+    Flux<Trade> findByTraderesultAndTradestatusAndOndatetimeGreaterThan(TradeResult traderesult, TradeStatus tradestatus, long ondatetime);
 }

@@ -53,4 +53,11 @@ public class TradeRepositoryTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void willFindClosedSuccessfulTrades() {
+        StepVerifier.create(repository.findByTraderesultAndTradestatusAndOndatetimeGreaterThan(TradeResult.SUCCESS, TradeStatus.CLOSED, 1718128103))
+                .expectNextMatches(it -> TradeResult.SUCCESS.equals(it.traderesult()) && TradeStatus.CLOSED.equals(it.tradestatus()) && it.ondatetime() >= 1718128103)
+                .verifyComplete();
+    }
+
 }

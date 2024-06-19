@@ -36,7 +36,7 @@ INSERT INTO trade (
            isakrakentrade,
            version
        )
-VALUES('SOLUSD', 0.1, 1.8, 1.8, 1.2,'OPEN',1718545122, 'FAILED',FALSE, 0);
+VALUES('SOLUSD', 0.1, 1.8, 1.8, 1.2,'OPEN',1710787703, 'FAILED',FALSE, 0);
 
 INSERT INTO trade (
            symbol,
@@ -50,4 +50,18 @@ INSERT INTO trade (
            isakrakentrade,
            version
        )
-VALUES('SOLUSD', 0.1,1.5, 1.8, 1.2,'CLOSED',1718545122, 'SUCCESS',FALSE, 0);
+VALUES('SOLUSD', 0.1,1.5, 1.8, 1.2,'CLOSED',1718473703, 'SUCCESS',FALSE, 0);
+
+INSERT INTO trade (
+           symbol,
+           volume,
+           price,
+           profitprice,
+           stopprice,
+           tradestatus,
+           ondatetime,
+           traderesult,
+           isakrakentrade,
+           version
+       )
+VALUES('SOLUSD', 0.1,1.5, 1.8, 1.2,'CLOSED',1705603703, null,FALSE, 0);
