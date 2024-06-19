@@ -71,7 +71,7 @@ public class HandleKrakenOpenTrades {
                                 result,
                                 trade.isakrakentrade(),
                                 trade.version()
-                        ));
+                        )).subscribe();
                     }
                 });
     }
