@@ -49,7 +49,7 @@ public class HandleKrakenOpenTrades {
                                     logger.info(String.format("%s Trade Closed", it.symbol()));
                                 }
 
-                                logger.info(String.format("%s latest-Price: %s, trade-price: %s", it.symbol(), price, it.price()));
+                                logger.info(String.format("%s latest-Price: %s, trade-price: %s, take-profit: %s, stop-loss: %", it.symbol(), price, it.price(), it.profitprice(), it.stopprice()));
 
                             });
                 });

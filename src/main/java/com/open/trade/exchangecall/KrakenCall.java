@@ -46,7 +46,14 @@ public class KrakenCall extends ExchangeCall {
                     }
 
                     Map data = (Map) it.result();
+
                     Map pairMap = (Map) data.get(symbol);
+
+                    if (pairMap == null) {
+                        String[] symbols = symbol.split("USD");
+                        pairMap = (Map) data.get("X" + symbols[0] + "ZUSD");
+                    }
+
                     List info = (List) pairMap.get("c");
                     return Double.valueOf((String) info.get(0));
                 })
