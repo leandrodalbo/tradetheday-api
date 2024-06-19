@@ -72,6 +72,10 @@ public class HandleKrakenOpenTrades {
                                 trade.isakrakentrade(),
                                 trade.version()
                         )).subscribe();
+
+                        logger.info(String.format("%s-trade-%s", trade.symbol(), result.toString()));
+                    } else {
+                        logger.warn(closing.message());
                     }
                 });
     }
