@@ -12,6 +12,7 @@ public class TradeTest {
                 "BTCUSDT",
                 0.1,
                 3.4,
+                3.4,
                 3.2,
                 TradeStatus.OPEN,
                 false

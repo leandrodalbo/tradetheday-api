@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Component
 public class KrakenCall extends ExchangeCall {
+    private static final String PRIVATE_URL = "/0/private/AddOrder";
     private static final String OHLC_URL = "/0/public/OHLC";
     private static final String TICKER_URL = "0/public/Ticker";
     private static final String API_KEY_HEADER = "API-Key";
@@ -84,12 +85,12 @@ public class KrakenCall extends ExchangeCall {
 
     public Mono<KrakenPostResult> postOrder(KrakenOrderPost orderPost) {
         return client.post()
-                .uri(
-                        orderPost.uriPath()
+                .uri(uriBuilder -> uriBuilder.path(PRIVATE_URL).build()
                 )
                 .header(API_KEY_HEADER, orderPost.apiKey())
                 .header(API_SIGN_HEADER, orderPost.signature())
-                .bodyValue(orderPost.body())
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .bodyValue(orderPost.data())
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(it -> {
@@ -101,8 +102,8 @@ public class KrakenCall extends ExchangeCall {
                         return new KrakenPostResult(false, "Kraken order failed");
                     }
 
-                    logger.info(String.format("Order Created for Pair %s", orderPost.body().pair()));
-                    return new KrakenPostResult(true, String.format("Order Created for Pair %s", orderPost.body().pair()));
+                    logger.info(String.format("Order Created %s", orderPost.data()));
+                    return new KrakenPostResult(true, String.format("Order Created %s", orderPost.data()));
 
                 })
                 .doOnError(e -> {

@@ -55,10 +55,6 @@ kraken:
   api-secret:
   profit: 1.02
   stop: 0.98
-  mac-algorithm: HmacSHA512
-  sha-algorithm: SHA-256
-  private-uri-path: /0/private/AddOrder
-  order-type: market
   symbols:
     - DOTUSD
     - 1INCHUSD

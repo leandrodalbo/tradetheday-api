@@ -37,10 +37,17 @@
 
 ```json
 {
-  "symbol": "string",
-  "volume": 0,
-  "profitprice": 0,
-  "stopprice": 0
+  "id": 1,
+  "symbol": "XRPUSD",
+  "volume": 100,
+  "price": 0.48936,
+  "profitprice": 0.4946,
+  "stopprice": 0.48474,
+  "tradestatus": "OPEN",
+  "ondatetime": 1718787088,
+  "traderesult": null,
+  "isakrakentrade": true,
+  "version": 0
 }
 ```
 
@@ -68,14 +75,15 @@
 ```json
 [
   {
-    "id": 0,
-    "symbol": "string",
-    "volume": 0,
-    "profitprice": 0,
-    "stopprice": 0,
+    "id": 1,
+    "symbol": "XRPUSD",
+    "volume": 100,
+    "price": 0.48936,
+    "profitprice": 0.4946,
+    "stopprice": 0.48474,
     "tradestatus": "OPEN",
-    "ondatetime": 0,
-    "traderesult": "SUCCESS",
+    "ondatetime": 1718787088,
+    "traderesult": null,
     "isakrakentrade": true,
     "version": 0
   }

@@ -28,7 +28,7 @@ public class TradesControllerTest {
 
         given(service.findTrades(any(), any(), any())).willReturn(
                 Flux.just(
-                        Trade.of("SOLUSDT", 2, 57.3, 55, TradeStatus.OPEN, true)
+                        Trade.of("SOLUSDT", 2, 43.4, 57.3, 55, TradeStatus.OPEN, true)
                 )
         );
 

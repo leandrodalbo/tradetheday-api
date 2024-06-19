@@ -27,6 +27,7 @@ VALUES('SOLUSD-LOW', FALSE, 2.0, 1.8, 2.2, TRUE, 2.0, 1.8, 2.2, 1718545122,0);
 INSERT INTO trade (
            symbol,
            volume,
+           price,
            profitprice,
            stopprice,
            tradestatus,
@@ -35,11 +36,12 @@ INSERT INTO trade (
            isakrakentrade,
            version
        )
-VALUES('SOLUSD', 0.1, 1.8, 1.2,'OPEN',1718545122, 'FAILED',FALSE, 0);
+VALUES('SOLUSD', 0.1, 1.8, 1.8, 1.2,'OPEN',1718545122, 'FAILED',FALSE, 0);
 
 INSERT INTO trade (
            symbol,
            volume,
+           price,
            profitprice,
            stopprice,
            tradestatus,
@@ -48,4 +50,4 @@ INSERT INTO trade (
            isakrakentrade,
            version
        )
-VALUES('SOLUSD', 0.1, 1.8, 1.2,'CLOSED',1718545122, 'SUCCESS',FALSE, 0);
+VALUES('SOLUSD', 0.1,1.5, 1.8, 1.2,'CLOSED',1718545122, 'SUCCESS',FALSE, 0);

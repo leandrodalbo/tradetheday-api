@@ -28,7 +28,7 @@ public class HandleKrakenOpenTrades {
         this.tradeRepository = tradeRepository;
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void handleOpenTrades() {
         logger.info("Checking Open Trades");
 
@@ -40,24 +40,30 @@ public class HandleKrakenOpenTrades {
                                 if (price <= it.stopprice()) {
                                     logger.info(String.format("stop-loss for symbol, %s", it.symbol()));
                                     closeTrade(it, TradeResult.FAILED);
+                                    logger.info(String.format("%s Trade Closed", it.symbol()));
                                 }
 
                                 if (price >= it.profitprice()) {
                                     logger.info(String.format("take-profit for symbol, %s", it.symbol()));
                                     closeTrade(it, TradeResult.SUCCESS);
+                                    logger.info(String.format("%s Trade Closed", it.symbol()));
                                 }
+
+                                logger.info(String.format("%s latest-Price: %s, trade-price: %s", it.symbol(), price, it.price()));
+
                             });
                 });
     }
 
     private void closeTrade(Trade trade, TradeResult result) {
-        orderService.postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL)
+        orderService.postOrder(trade.symbol(), trade.volume(), trade.price(), KrakenBuySell.SELL)
                 .subscribe(closing -> {
                     if (closing.success()) {
                         tradeRepository.save(new Trade(
                                 trade.id(),
                                 trade.symbol(),
                                 trade.volume(),
+                                trade.price(),
                                 trade.profitprice(),
                                 trade.stopprice(),
                                 TradeStatus.CLOSED,

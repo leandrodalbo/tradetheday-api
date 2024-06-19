@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.trade.configuration.WebClientProvider;
 import com.open.trade.data.Candle;
 import com.open.trade.data.kraken.KrakenOrderPost;
-import com.open.trade.data.kraken.KrakenOrderPostBody;
 import com.open.trade.data.kraken.KrakenPostResult;
 import com.open.trade.exchangecall.exchange.KrakenResponse;
 import com.open.trade.model.Speed;
@@ -30,10 +29,9 @@ import static org.mockito.Mockito.when;
 
 public class KrakenCallTest {
 
-    ObjectMapper mapper = new ObjectMapper();
-
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final String reqDat = "pair=SOLUSD&type=buy&ordertype=market&price=3.4&volume=0.2&nonce=1323552335";
     private MockWebServer mockWebServer;
-
     @InjectMocks
     private KrakenCall krakenCall;
 
@@ -118,13 +116,8 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<KrakenPostResult> result = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
-                System.currentTimeMillis(),
-                "market",
-                "buy",
-                0.2,
-                "SOLUSD"
-        )));
+        Mono<KrakenPostResult> result = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg",
+                reqDat));
 
         StepVerifier.create(result)
                 .expectNextMatches(KrakenPostResult::success)
@@ -141,13 +134,7 @@ public class KrakenCallTest {
 
         mockWebServer.enqueue(mockResponse);
 
-        Mono<KrakenPostResult> result = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", "/AddOrder", new KrakenOrderPostBody(
-                System.currentTimeMillis(),
-                "market",
-                "buy",
-                0.2,
-                "SOLUSD"
-        )));
+        Mono<KrakenPostResult> result = krakenCall.postOrder(new KrakenOrderPost("abdq4sa22", "sabdsbq4dafg", reqDat));
 
         StepVerifier.create(result)
                 .expectNextMatches(it -> !it.success())

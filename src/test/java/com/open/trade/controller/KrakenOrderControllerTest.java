@@ -30,6 +30,7 @@ public class KrakenOrderControllerTest {
         given(service.newTrade(any())).willReturn(
                 Mono.just(Trade.of("BTCUSD",
                         0.2,
+                        65000.3,
                         65000.0,
                         62000.3,
                         TradeStatus.OPEN,
@@ -39,11 +40,9 @@ public class KrakenOrderControllerTest {
 
         client.post()
                 .uri("/opentrade/crypto/kraken/neworder")
-                .bodyValue(new OpenTrade("BTCUSD", 0.2, 65000.0, 62000.3))
+                .bodyValue(new OpenTrade("BTCUSD", 0.2, 65000.3, 65000.0, 62000.3))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
-
-
     }
 }
 

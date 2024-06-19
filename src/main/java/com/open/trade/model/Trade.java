@@ -10,6 +10,7 @@ public record Trade(
         Long id,
         String symbol,
         double volume,
+        double price,
         double profitprice,
         double stopprice,
         TradeStatus tradestatus,
@@ -21,6 +22,7 @@ public record Trade(
 ) {
     public static Trade of(String symbol,
                            double volume,
+                           double price,
                            double profitprice,
                            double stopprice,
                            TradeStatus tradestatus,
@@ -29,6 +31,7 @@ public record Trade(
         return new Trade(null,
                 symbol,
                 volume,
+                price,
                 profitprice,
                 stopprice,
                 tradestatus,

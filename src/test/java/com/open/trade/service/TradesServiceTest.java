@@ -33,14 +33,14 @@ public class TradesServiceTest {
     @Test
     void filterByResultStatusAndDate() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.of(TradeResult.SUCCESS), Optional.of(TradeStatus.CLOSED), Optional.of(true))).isTrue();
     }
 
     @Test
     void filterByResultAndStatus() {
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, Instant.now().minus(2, ChronoUnit.DAYS).getEpochSecond(), TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, Instant.now().minus(2, ChronoUnit.DAYS).getEpochSecond(), TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.of(TradeResult.SUCCESS), Optional.of(TradeStatus.CLOSED), Optional.empty())).isTrue();
     }
@@ -48,7 +48,7 @@ public class TradesServiceTest {
     @Test
     void filterByStatusAndDate() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.FAILED, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.FAILED, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.empty(), Optional.of(TradeStatus.CLOSED), Optional.of(true))).isTrue();
     }
@@ -56,7 +56,7 @@ public class TradesServiceTest {
     @Test
     void filterByResultAndDate() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.of(TradeResult.SUCCESS), Optional.empty(), Optional.of(true))).isTrue();
     }
@@ -64,7 +64,7 @@ public class TradesServiceTest {
     @Test
     void filterByDate() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.empty(), Optional.empty(), Optional.of(true))).isTrue();
     }
@@ -72,7 +72,7 @@ public class TradesServiceTest {
     @Test
     void filterByResult() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.of(TradeResult.SUCCESS), Optional.empty(), Optional.empty())).isTrue();
     }
@@ -80,7 +80,7 @@ public class TradesServiceTest {
     @Test
     void filterByStatus() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.empty(), Optional.of(TradeStatus.CLOSED), Optional.empty())).isTrue();
     }
@@ -88,7 +88,7 @@ public class TradesServiceTest {
     @Test
     void isTrueWithoutFilters() {
         long date = Instant.now().getEpochSecond();
-        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
+        Trade t = new Trade(1L, "BTCUSD", 0.1, 55000.3, 55000, 50000, TradeStatus.CLOSED, date, TradeResult.SUCCESS, false, 0);
 
         assertThat(service.tradeFilter(t, Optional.empty(), Optional.empty(), Optional.empty())).isTrue();
     }
@@ -98,8 +98,8 @@ public class TradesServiceTest {
     void findTrades() {
         when(repository.findAll()).thenReturn(
                 Flux.just(
-                        Trade.of("BTCUSD", 0.01, 54.033, 50.002, TradeStatus.OPEN, true),
-                        Trade.of("BTCUSD", 0.01, 54.033, 50.002, TradeStatus.CLOSED, false)
+                        Trade.of("BTCUSD", 0.01, 55000.3, 54.033, 50.002, TradeStatus.OPEN, true),
+                        Trade.of("BTCUSD", 0.01, 55000.3, 54.033, 50.002, TradeStatus.CLOSED, false)
                 )
         );
 
