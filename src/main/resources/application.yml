@@ -53,7 +53,7 @@ kraken:
   api-uri: https://api.kraken.com
   api-key:
   api-secret:
-  profit: 1.02
+  profit: 1.04
   stop: 0.98
   symbols:
     - DOTUSD

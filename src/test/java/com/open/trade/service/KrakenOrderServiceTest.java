@@ -2,13 +2,10 @@ package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
 import com.open.trade.exchangecall.KrakenCall;
-import com.open.trade.exchanging.OpenTrade;
+import com.open.trade.exchanging.kraken.KrakenMarketBuy;
 import com.open.trade.exchanging.kraken.KrakenBuySell;
 import com.open.trade.exchanging.kraken.KrakenOrderType;
 import com.open.trade.exchanging.kraken.KrakenPostResult;
-import com.open.trade.model.Trade;
-import com.open.trade.model.TradeStatus;
-import com.open.trade.repository.TradeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,7 +80,7 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Mono<Object> result = service.newTrade(new OpenTrade(
+        Mono<Object> result = service.newTrade(new KrakenMarketBuy(
                 "SOLUSD",
                 2.3,
                 43.4,
@@ -101,7 +98,7 @@ public class KrakenOrderServiceTest {
     void WillValidateKrakenSymbolPair() {
         when(props.symbols()).thenReturn(Set.of("XRPUSDT"));
 
-        Mono<Object> result = service.newTrade(new OpenTrade(
+        Mono<Object> result = service.newTrade(new KrakenMarketBuy(
                 "XRPUSD",
                 100,
                 0.4823,
@@ -124,7 +121,7 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));
 
-        Mono<Object> result = service.newTrade(new OpenTrade(
+        Mono<Object> result = service.newTrade(new KrakenMarketBuy(
                 "SOLUSD",
                 2.3,
                 43.4,

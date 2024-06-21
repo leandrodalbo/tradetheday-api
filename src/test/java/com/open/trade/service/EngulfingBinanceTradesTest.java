@@ -2,8 +2,8 @@ package com.open.trade.service;
 
 
 import com.open.trade.configuration.BinanceProps;
-import com.open.trade.exchanging.Candle;
 import com.open.trade.exchangecall.BinanceCall;
+import com.open.trade.exchanging.Candle;
 import com.open.trade.model.Opportunity;
 import com.open.trade.model.Speed;
 import com.open.trade.repository.OpportunityRepository;

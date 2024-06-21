@@ -2,16 +2,11 @@ package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
 import com.open.trade.exchangecall.KrakenCall;
-import com.open.trade.exchanging.OpenTrade;
+import com.open.trade.exchanging.kraken.KrakenMarketBuy;
 import com.open.trade.exchanging.kraken.KrakenBuySell;
 import com.open.trade.exchanging.kraken.KrakenOrderPost;
 import com.open.trade.exchanging.kraken.KrakenOrderType;
 import com.open.trade.exchanging.kraken.KrakenPostResult;
-import com.open.trade.model.Trade;
-import com.open.trade.model.TradeStatus;
-import com.open.trade.repository.TradeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -41,7 +36,43 @@ public class KrakenOrderService {
         this.repository = repository;
     }
 
-    public Mono<Object> newTrade(OpenTrade trade) {
+    public Mono<Object> setStopLoss(KrakenMarketBuy trade) {
+
+        if (!props.symbols().contains(trade.symbol())) {
+            return Mono.just(List.of("Invalid Kraken symbol"));
+        }
+
+        return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY, KrakenOrderType.MARKET, Optional.empty())
+                .flatMap(it ->
+                        {
+                            if (!it.success()) {
+                                return Mono.just(it.message());
+                            }
+
+                            return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL, KrakenOrderType.STOP_LOSS, Optional.of(trade.stopprice()))
+                                    .map(stop -> {
+                                        if (!stop.success()) {
+                                            Mono.just(it.message());
+                                        }
+
+                                        return repository.save(Trade.of(
+                                                trade.symbol(),
+                                                trade.volume(),
+                                                trade.price(),
+                                                trade.profitprice(),
+                                                trade.stopprice(),
+                                                TradeStatus.OPEN,
+                                                true
+                                        ));
+                                    });
+
+
+                        }
+                );
+    }
+
+
+    public Mono<Object> newTrade(KrakenMarketBuy trade) {
 
         if (!props.symbols().contains(trade.symbol())) {
             return Mono.just(List.of("Invalid Kraken symbol"));

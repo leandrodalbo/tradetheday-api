@@ -1,8 +1,6 @@
 package com.open.trade.controller;
 
-import com.open.trade.exchanging.OpenTrade;
-import com.open.trade.model.Trade;
-import com.open.trade.model.TradeStatus;
+import com.open.trade.exchanging.kraken.KrakenMarketBuy;
 import com.open.trade.service.KrakenOrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class KrakenOrderControllerTest {
 
         client.post()
                 .uri("/opentrade/crypto/kraken/neworder")
-                .bodyValue(new OpenTrade("BTCUSD", 0.2, 65000.3, 65000.0, 62000.3))
+                .bodyValue(new KrakenMarketBuy("BTCUSD", 0.2, 65000.3, 65000.0, 62000.3))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
     }
