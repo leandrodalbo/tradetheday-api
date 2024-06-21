@@ -51,7 +51,7 @@ public class OpportunitiesServiceTest {
                                 0.0f,
                                 0.0f,
                                 0.0f,
-                                Instant.now().minus(2, ChronoUnit.DAYS).getEpochSecond(),
+                                Instant.now().minus(5, ChronoUnit.HOURS).getEpochSecond(),
                                 0
                         ))
         );
@@ -59,7 +59,7 @@ public class OpportunitiesServiceTest {
         Flux<Opportunity> result = service.findLatestEntries();
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> it.ondatetime() > Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond());
+                .thenConsumeWhile(it -> it.ondatetime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond());
 
         verify(repository, times(1)).findAll();
     }

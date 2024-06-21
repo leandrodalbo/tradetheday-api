@@ -7,6 +7,7 @@ import reactor.core.publisher.Flux;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 
 @Service
 public class OpportunitiesService {
@@ -20,6 +21,8 @@ public class OpportunitiesService {
     public Flux<Opportunity> findLatestEntries() {
         return repository.findAll()
                 .filter(it ->
-                        it.ondatetime() > Instant.now().minus(1, ChronoUnit.DAYS).getEpochSecond());
+                        it.ondatetime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond())
+                .sort(Comparator.comparing(Opportunity::ondatetime).reversed());
+
     }
 }
