@@ -28,7 +28,7 @@ public class HandleKrakenOpenTrades {
         this.tradeRepository = tradeRepository;
     }
 
-    @Scheduled(cron = "0 */3 * * * *")
+
     public void handleOpenTrades() {
         logger.info("Checking Open Trades");
 
