@@ -1,6 +1,7 @@
 package com.open.trade.scheduled;
 
 import com.open.trade.exchanging.kraken.KrakenBuySell;
+import com.open.trade.exchanging.kraken.KrakenOrderType;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeResult;
 import com.open.trade.model.TradeStatus;
@@ -9,8 +10,9 @@ import com.open.trade.service.KrakenOrderService;
 import com.open.trade.service.KrakenPriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class HandleKrakenOpenTrades {
@@ -56,7 +58,7 @@ public class HandleKrakenOpenTrades {
     }
 
     private void closeTrade(Trade trade, TradeResult result) {
-        orderService.postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL)
+        orderService.postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL, KrakenOrderType.MARKET, Optional.empty())
                 .subscribe(closing -> {
                     if (closing.success()) {
                         tradeRepository.save(new Trade(

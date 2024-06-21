@@ -4,6 +4,7 @@ import com.open.trade.configuration.KrakenProps;
 import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.exchanging.OpenTrade;
 import com.open.trade.exchanging.kraken.KrakenBuySell;
+import com.open.trade.exchanging.kraken.KrakenOrderType;
 import com.open.trade.exchanging.kraken.KrakenPostResult;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeStatus;
@@ -20,6 +21,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -48,7 +50,22 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY);
+        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY, KrakenOrderType.MARKET,Optional.empty());
+
+        StepVerifier.create(result)
+                .thenConsumeWhile(KrakenPostResult::success);
+
+        verify(krakenCall, times(1)).postOrder(any());
+    }
+
+    @Test
+    void willPostAStopLossOrder() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
+
+        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY, KrakenOrderType.STOP_LOSS,Optional.of(3.4));
 
         StepVerifier.create(result)
                 .thenConsumeWhile(KrakenPostResult::success);

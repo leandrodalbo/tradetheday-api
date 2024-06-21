@@ -5,10 +5,13 @@ import com.open.trade.exchangecall.KrakenCall;
 import com.open.trade.exchanging.OpenTrade;
 import com.open.trade.exchanging.kraken.KrakenBuySell;
 import com.open.trade.exchanging.kraken.KrakenOrderPost;
+import com.open.trade.exchanging.kraken.KrakenOrderType;
 import com.open.trade.exchanging.kraken.KrakenPostResult;
 import com.open.trade.model.Trade;
 import com.open.trade.model.TradeStatus;
 import com.open.trade.repository.TradeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -19,16 +22,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class KrakenOrderService {
     private static final String ADD_ORDER_PATH = "/0/private/AddOrder";
     private static final String SHA_256 = "SHA-256";
     private static final String HMAC_SHA_512 = "HmacSHA512";
-    private static final String ORDER_TYPE = "market";
+
 
     private final KrakenProps props;
     private final KrakenCall krakenCall;
@@ -43,37 +44,49 @@ public class KrakenOrderService {
     public Mono<Object> newTrade(OpenTrade trade) {
 
         if (!props.symbols().contains(trade.symbol())) {
-            return Mono.just("Invalid Kraken symbol");
+            return Mono.just(List.of("Invalid Kraken symbol"));
         }
 
-        return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY)
+        return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY, KrakenOrderType.MARKET, Optional.empty())
                 .flatMap(it ->
                         {
                             if (!it.success()) {
                                 return Mono.just(it.message());
                             }
-                            return repository.save(Trade.of(
-                                    trade.symbol(),
-                                    trade.volume(),
-                                    trade.price(),
-                                    trade.profitprice(),
-                                    trade.stopprice(),
-                                    TradeStatus.OPEN,
-                                    true
-                            ));
+
+                            return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL, KrakenOrderType.STOP_LOSS, Optional.of(trade.stopprice()))
+                                    .map(stop -> {
+                                        if (!stop.success()) {
+                                            Mono.just(it.message());
+                                        }
+
+                                        return repository.save(Trade.of(
+                                                trade.symbol(),
+                                                trade.volume(),
+                                                trade.price(),
+                                                trade.profitprice(),
+                                                trade.stopprice(),
+                                                TradeStatus.OPEN,
+                                                true
+                                        ));
+                                    });
+
+
                         }
                 );
     }
 
-    public Mono<KrakenPostResult> postOrder(String symbol, double volume, KrakenBuySell buySell) {
+    public Mono<KrakenPostResult> postOrder(String symbol, double volume, KrakenBuySell buySell, KrakenOrderType orderType, Optional<Double> price) {
         String nonce = String.valueOf(System.currentTimeMillis());
         Map<String, String> params = new HashMap<>();
 
         params.put("nonce", nonce);
-        params.put("ordertype", ORDER_TYPE);
+        params.put("ordertype", orderType.name().toLowerCase());
         params.put("pair", symbol);
         params.put("type", buySell.name().toLowerCase());
         params.put("volume", String.valueOf(volume));
+
+        price.ifPresent(value -> params.put("price", String.valueOf(value)));
 
         String data = postingData(params);
 
