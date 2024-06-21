@@ -9,9 +9,9 @@
 
 - GET /opentrade/crypto/engulfing/entries
 
-## Open new trade
+## Set Kraken stop-loss order
 
-- POST /opentrade/crypto/kraken/neworder
+- POST /opentrade/crypto/kraken/stop
 
 ### Request Body
 
@@ -19,14 +19,21 @@
 {
   "symbol": "string",
   "volume": 0,
-  "price": 0,
-  "profitprice": 0,
-  "stopprice": 0
+  "trigger": 0
 }
 ```
+## Set Kraken market order
 
-## Trades Search
-- GET /opentrade/crypto/trades?status=OPEN&result=SUCCESS&today=false'
+- POST /opentrade/crypto/kraken/enter
+
+### Request Body
+
+```json
+{
+  "symbol": "string",
+  "volume": 0
+}
+```
 
 ### Postgres db Container
 

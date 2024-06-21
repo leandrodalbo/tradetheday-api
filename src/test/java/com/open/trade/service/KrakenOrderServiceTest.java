@@ -2,10 +2,7 @@ package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
 import com.open.trade.exchangecall.KrakenCall;
-import com.open.trade.exchanging.kraken.KrakenMarketBuy;
-import com.open.trade.exchanging.kraken.KrakenBuySell;
-import com.open.trade.exchanging.kraken.KrakenOrderType;
-import com.open.trade.exchanging.kraken.KrakenPostResult;
+import com.open.trade.exchanging.kraken.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,9 +26,6 @@ import static org.mockito.Mockito.*;
 public class KrakenOrderServiceTest {
 
     @Mock
-    TradeRepository repository;
-
-    @Mock
     KrakenCall krakenCall;
 
     @Mock
@@ -47,7 +41,7 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY, KrakenOrderType.MARKET,Optional.empty());
+        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY, KrakenOrderType.MARKET, Optional.empty());
 
         StepVerifier.create(result)
                 .thenConsumeWhile(KrakenPostResult::success);
@@ -62,7 +56,7 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY, KrakenOrderType.STOP_LOSS,Optional.of(3.4));
+        Mono<KrakenPostResult> result = service.postOrder("SOLUSD", 1.2, KrakenBuySell.BUY, KrakenOrderType.STOP_LOSS, Optional.of(3.4));
 
         StepVerifier.create(result)
                 .thenConsumeWhile(KrakenPostResult::success);
@@ -72,7 +66,7 @@ public class KrakenOrderServiceTest {
 
 
     @Test
-    void willOpenAnewTrade() {
+    void ShouldDareToEnterTheMarket() {
         when(props.apiKey()).thenReturn("aber23v");
         when(props.apiSecret()).thenReturn("aber23v");
         when(props.symbols()).thenReturn(Set.of("SOLUSD"));
@@ -80,16 +74,12 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Mono<Object> result = service.newTrade(new KrakenMarketBuy(
+        Mono<String> result = service.dareToEnter(new KrakenMarketBuy(
                 "SOLUSD",
-                2.3,
-                43.4,
-                54.0,
-                50.1
-        ));
+                2.3));
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> ((Trade) it).tradestatus().equals(TradeStatus.OPEN));
+                .thenConsumeWhile("Order Completed"::equals);
 
         verify(krakenCall, times(1)).postOrder(any());
     }
@@ -98,12 +88,9 @@ public class KrakenOrderServiceTest {
     void WillValidateKrakenSymbolPair() {
         when(props.symbols()).thenReturn(Set.of("XRPUSDT"));
 
-        Mono<Object> result = service.newTrade(new KrakenMarketBuy(
+        Mono<String> result = service.dareToEnter(new KrakenMarketBuy(
                 "XRPUSD",
-                100,
-                0.4823,
-                0.4923,
-                0.4723
+                100
         ));
 
         StepVerifier.create(result)
@@ -121,12 +108,68 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));
 
-        Mono<Object> result = service.newTrade(new KrakenMarketBuy(
+        Mono<String> result = service.dareToEnter(new KrakenMarketBuy(
                 "SOLUSD",
-                2.3,
-                43.4,
-                54.0,
-                50.1
+                2.3
+        ));
+
+        StepVerifier.create(result)
+                .expectError();
+
+        verify(krakenCall, times(1)).postOrder(any());
+    }
+
+
+    @Test
+    void ShouldSetStopLoss() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.symbols()).thenReturn(Set.of("SOLUSD"));
+
+
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
+
+        Mono<String> result = service.setStopLoss(new KrakenStopLoss(
+                "SOLUSD",
+                23.2,
+                55.0
+        ));
+
+        StepVerifier.create(result)
+                .thenConsumeWhile("Stop Loss completed"::equals);
+
+        verify(krakenCall, times(1)).postOrder(any());
+    }
+
+    @Test
+    void WillValidateStopKrakenSymbolPair() {
+        when(props.symbols()).thenReturn(Set.of("XRPUSDT"));
+
+        Mono<String> result = service.setStopLoss(new KrakenStopLoss(
+                "SOLUSDT",
+                23.2,
+                55.0
+        ));
+
+        StepVerifier.create(result)
+                .thenConsumeWhile("Invalid Kraken symbol"::equals);
+
+        verify(krakenCall, times(0)).postOrder(any());
+    }
+
+
+    @Test
+    void willGetAnErrorWhenStopLossOrderFailed() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.symbols()).thenReturn(Set.of("SOLUSD"));
+
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));
+
+        Mono<String> result = service.setStopLoss(new KrakenStopLoss(
+                "SOLUSD",
+                23.2,
+                55.0
         ));
 
         StepVerifier.create(result)

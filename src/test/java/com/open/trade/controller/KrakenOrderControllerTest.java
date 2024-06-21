@@ -1,6 +1,7 @@
 package com.open.trade.controller;
 
 import com.open.trade.exchanging.kraken.KrakenMarketBuy;
+import com.open.trade.exchanging.kraken.KrakenStopLoss;
 import com.open.trade.service.KrakenOrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +24,27 @@ public class KrakenOrderControllerTest {
 
 
     @Test
-    void shouldGETEngulfingResultsBySpeed() {
+    void shouldEnterWithSymbol() {
 
-        given(service.newTrade(any())).willReturn(
-                Mono.just(Trade.of("BTCUSD",
-                        0.2,
-                        65000.3,
-                        65000.0,
-                        62000.3,
-                        TradeStatus.OPEN,
-                        true
-                ))
-        );
+        given(service.dareToEnter(any())).willReturn(
+                Mono.just("SUCCESS"));
 
         client.post()
-                .uri("/opentrade/crypto/kraken/neworder")
-                .bodyValue(new KrakenMarketBuy("BTCUSD", 0.2, 65000.3, 65000.0, 62000.3))
+                .uri("/opentrade/crypto/kraken/enter")
+                .bodyValue(new KrakenMarketBuy("BTCUSD", 0.2))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+    }
+
+    @Test
+    void shouldSetStopLossForSymbol() {
+
+        given(service.setStopLoss(any())).willReturn(
+                Mono.just("SUCCESS"));
+
+        client.post()
+                .uri("/opentrade/crypto/kraken/stop")
+                .bodyValue(new KrakenStopLoss("BTCUSD", 0.2, 30000.0))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
     }

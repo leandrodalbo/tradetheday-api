@@ -2,11 +2,7 @@ package com.open.trade.service;
 
 import com.open.trade.configuration.KrakenProps;
 import com.open.trade.exchangecall.KrakenCall;
-import com.open.trade.exchanging.kraken.KrakenMarketBuy;
-import com.open.trade.exchanging.kraken.KrakenBuySell;
-import com.open.trade.exchanging.kraken.KrakenOrderPost;
-import com.open.trade.exchanging.kraken.KrakenOrderType;
-import com.open.trade.exchanging.kraken.KrakenPostResult;
+import com.open.trade.exchanging.kraken.*;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class KrakenOrderService {
@@ -28,54 +27,35 @@ public class KrakenOrderService {
 
     private final KrakenProps props;
     private final KrakenCall krakenCall;
-    private final TradeRepository repository;
 
-    public KrakenOrderService(KrakenProps props, KrakenCall krakenCall, TradeRepository repository) {
+    public KrakenOrderService(KrakenProps props, KrakenCall krakenCall) {
         this.props = props;
         this.krakenCall = krakenCall;
-        this.repository = repository;
     }
 
-    public Mono<Object> setStopLoss(KrakenMarketBuy trade) {
+    public Mono<String> setStopLoss(KrakenStopLoss stop) {
 
-        if (!props.symbols().contains(trade.symbol())) {
-            return Mono.just(List.of("Invalid Kraken symbol"));
+        if (!props.symbols().contains(stop.symbol())) {
+            return Mono.just("Invalid Kraken symbol");
         }
 
-        return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY, KrakenOrderType.MARKET, Optional.empty())
+        return postOrder(stop.symbol(), stop.volume(), KrakenBuySell.SELL, KrakenOrderType.STOP_LOSS, Optional.of(stop.trigger()))
                 .flatMap(it ->
                         {
                             if (!it.success()) {
                                 return Mono.just(it.message());
+                            } else {
+                                return Mono.just("Stop Loss completed");
                             }
-
-                            return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL, KrakenOrderType.STOP_LOSS, Optional.of(trade.stopprice()))
-                                    .map(stop -> {
-                                        if (!stop.success()) {
-                                            Mono.just(it.message());
-                                        }
-
-                                        return repository.save(Trade.of(
-                                                trade.symbol(),
-                                                trade.volume(),
-                                                trade.price(),
-                                                trade.profitprice(),
-                                                trade.stopprice(),
-                                                TradeStatus.OPEN,
-                                                true
-                                        ));
-                                    });
-
-
                         }
                 );
     }
 
 
-    public Mono<Object> newTrade(KrakenMarketBuy trade) {
+    public Mono<String> dareToEnter(KrakenMarketBuy trade) {
 
         if (!props.symbols().contains(trade.symbol())) {
-            return Mono.just(List.of("Invalid Kraken symbol"));
+            return Mono.just("Invalid Kraken symbol");
         }
 
         return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY, KrakenOrderType.MARKET, Optional.empty())
@@ -83,26 +63,9 @@ public class KrakenOrderService {
                         {
                             if (!it.success()) {
                                 return Mono.just(it.message());
+                            } else {
+                                return Mono.just("Order Completed");
                             }
-
-                            return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.SELL, KrakenOrderType.STOP_LOSS, Optional.of(trade.stopprice()))
-                                    .map(stop -> {
-                                        if (!stop.success()) {
-                                            Mono.just(it.message());
-                                        }
-
-                                        return repository.save(Trade.of(
-                                                trade.symbol(),
-                                                trade.volume(),
-                                                trade.price(),
-                                                trade.profitprice(),
-                                                trade.stopprice(),
-                                                TradeStatus.OPEN,
-                                                true
-                                        ));
-                                    });
-
-
                         }
                 );
     }
