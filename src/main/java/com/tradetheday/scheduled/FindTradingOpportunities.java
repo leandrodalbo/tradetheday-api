@@ -21,7 +21,7 @@ public class FindTradingOpportunities {
         this.binanceSearch = binanceSearch;
     }
 
-    @Scheduled(cron = "0 1 0/1 * * *")
+    @Scheduled(cron = "0 1 * * * *")
     public void searchBinanceEngulfingCandles() {
         for (Timeframe tf : Timeframe.values()) {
             logger.info(String.format("Searching Binance Engulfing candles, %s", tf));
@@ -30,7 +30,7 @@ public class FindTradingOpportunities {
         }
     }
 
-    @Scheduled(cron = "0 2 0/1 * * *")
+    //@Scheduled(cron = "0 2 0/1 * * *")
     public void searchKrakenEngulfingCandles() {
         for (Timeframe tf : Timeframe.values()) {
             logger.info(String.format("Searching Kraken Engulfing candles, %s", tf));
@@ -40,7 +40,7 @@ public class FindTradingOpportunities {
     }
 
 
-    @Scheduled(cron = "0 3 0/1 * * *")
+   // @Scheduled(cron = "0 3 0/1 * * *")
     public void searchKrakenMACrossovers() {
         for (Timeframe tf : Timeframe.values()) {
             logger.info(String.format("Searching Kraken MA Crossovers, %s", tf));
@@ -49,7 +49,7 @@ public class FindTradingOpportunities {
         }
     }
 
-    @Scheduled(cron = "0 5 0/1 * * *")
+   // @Scheduled(cron = "0 5 0/1 * * *")
     public void searchBinanceMACrossovers() {
         for (Timeframe tf : Timeframe.values()) {
             logger.info(String.format("Searching Binance MA Crossovers, %s", tf));

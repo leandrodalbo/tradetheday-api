@@ -8,7 +8,6 @@ import reactor.core.publisher.Flux;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 
 @Service
 public class OpportunitiesService {
@@ -20,12 +19,12 @@ public class OpportunitiesService {
     }
 
     public Flux<Opportunity> findByTimeframe(Timeframe timeframe) {
+        long time = Instant.now().minus(2, ChronoUnit.HOURS).getEpochSecond();
         return repository.findAll()
                 .filter(it ->
-                        it.symbolspeed().contains(timeframe.toString())
-                                &&
-                                it.ondatetime() > Instant.now().minus(4, ChronoUnit.HOURS).getEpochSecond())
-                .sort(Comparator.comparing(Opportunity::ondatetime).reversed());
-
+                        it.binanceengulfingtime() >= time ||
+                                it.binancematime() >= time ||
+                                it.krakenengulfingtime() >= time ||
+                                it.krakenmatime() >= time);
     }
 }

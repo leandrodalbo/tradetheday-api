@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,19 +48,23 @@ public class BinanceSearchServiceTest {
     void shouldSearchAndUpdateEngulfingOpportunities() {
         when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
         when(repository.findById(anyString())).thenReturn(Mono.just(
-                Opportunity.of(
-                        "BTCUSDT",
-                        Timeframe.H1,
+                new Opportunity(
+                        "BTCUSDT-H1",
                         true,
+                        Instant.now().getEpochSecond(),
                         true,
+                        Instant.now().getEpochSecond(),
                         3000.00F,
                         3000.00F,
                         3000.00F,
                         false,
+                        Instant.now().getEpochSecond(),
                         true,
+                        Instant.now().getEpochSecond(),
                         0.0f,
                         0.0f,
-                        0.0f
+                        0.0f,
+                        0
                 )
         ));
         when(repository.save(any())).thenReturn(Mono.empty());
@@ -129,19 +134,23 @@ public class BinanceSearchServiceTest {
     void shouldSearchAndUpdateMAOpportunities() {
         when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
         when(repository.findById(anyString())).thenReturn(Mono.just(
-                Opportunity.of(
-                        "BTCUSDT",
-                        Timeframe.H1,
+                new Opportunity(
+                        "BTCUSDT-H1",
                         true,
+                        Instant.now().getEpochSecond(),
                         true,
+                        Instant.now().getEpochSecond(),
                         3000.00F,
                         3000.00F,
                         3000.00F,
                         false,
+                        Instant.now().getEpochSecond(),
                         true,
+                        Instant.now().getEpochSecond(),
                         0.0f,
                         0.0f,
-                        0.0f
+                        0.0f,
+                        0
                 )
         ));
         when(repository.save(any())).thenReturn(Mono.empty());

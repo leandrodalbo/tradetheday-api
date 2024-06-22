@@ -41,8 +41,8 @@ public class OpportunityRepositoryTest {
     @Test
     void willFindById() {
 
-        StepVerifier.create(repository.findById(Opportunity.generateSimbolSpeed("BTCUSDT", Timeframe.H1)))
-                .expectNextMatches(opportunity -> opportunity.symbolspeed().equals("BTCUSDT-H1"))
+        StepVerifier.create(repository.findById(Opportunity.generateId("BTCUSDT", Timeframe.H1)))
+                .expectNextMatches(opportunity -> opportunity.opportunityid().equals("BTCUSDT-H1"))
                 .verifyComplete();
     }
 }

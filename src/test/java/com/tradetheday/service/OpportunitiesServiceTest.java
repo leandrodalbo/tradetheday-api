@@ -29,33 +29,40 @@ public class OpportunitiesServiceTest {
     @Test
     void findLatestEntries() {
         when(repository.findAll()).thenReturn(
-                Flux.just(Opportunity.of(
-                                "BTCUSDT",
-                                Timeframe.H1,
+                Flux.just(new Opportunity(
+                                "BTCUSDT-H1",
                                 true,
+                                Instant.now().getEpochSecond(),
                                 true,
+                                Instant.now().getEpochSecond(),
                                 3000.00F,
                                 3000.00F,
                                 3000.00F,
                                 false,
+                                Instant.now().getEpochSecond(),
                                 true,
+                                Instant.now().getEpochSecond(),
                                 0.0f,
                                 0.0f,
-                                0.0f
+                                0.0f,
+                                0
                         ),
                         new Opportunity(
-                                Opportunity.generateSimbolSpeed("BTCUSDT", Timeframe.H1),
+                                Opportunity.generateId("BTCUSDT", Timeframe.H1),
                                 true,
+                                Instant.now().getEpochSecond(),
                                 true,
+                                Instant.now().getEpochSecond(),
                                 3000.00F,
                                 3000.00F,
                                 3000.00F,
                                 false,
+                                Instant.now().getEpochSecond(),
                                 true,
+                                Instant.now().getEpochSecond(),
                                 0.0f,
                                 0.0f,
                                 0.0f,
-                                Instant.now().minus(5, ChronoUnit.HOURS).getEpochSecond(),
                                 0
                         ))
         );
@@ -63,7 +70,7 @@ public class OpportunitiesServiceTest {
         Flux<Opportunity> result = service.findByTimeframe(Timeframe.H1);
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> it.ondatetime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond());
+                .thenConsumeWhile(it -> it.binanceengulfingtime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond());
 
         verify(repository, times(1)).findAll();
     }
