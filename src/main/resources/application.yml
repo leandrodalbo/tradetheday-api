@@ -3,9 +3,9 @@ server:
 springdoc:
   swagger-ui:
     enabled: true
-    path: /opentrade/swagger.html
+    path: /tradetheday/swagger.html
   api-docs:
-    path: /opentrade/docs
+    path: /tradetheday/docs
 spring:
   application:
     name: trade-signal
