@@ -60,7 +60,7 @@ public class OpportunitiesServiceTest {
                         ))
         );
 
-        Flux<Opportunity> result = service.findLatestEntries();
+        Flux<Opportunity> result = service.findByTimeframe(Timeframe.H1);
 
         StepVerifier.create(result)
                 .thenConsumeWhile(it -> it.ondatetime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond());

@@ -2,6 +2,8 @@ package com.tradetheday.controller;
 
 import com.tradetheday.model.Opportunity;
 import com.tradetheday.model.Timeframe;
+import com.tradetheday.service.BinanceSearchService;
+import com.tradetheday.service.KrakenSearchService;
 import com.tradetheday.service.OpportunitiesService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +14,28 @@ import reactor.core.publisher.Flux;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @WebFluxTest(OpportunitiesController.class)
-public class EngulfingEntriesControllerTest {
+public class OpportunitiesControllerTest {
 
     @MockBean
-    OpportunitiesService service;
+    OpportunitiesService opportunitiesService;
+
+    @MockBean
+    KrakenSearchService krakenSearch;
+
+    @MockBean
+    BinanceSearchService binanceSearch;
 
     @Autowired
     WebTestClient client;
 
 
     @Test
-    void shouldGETEntries() {
+    void shouldGETSavedOpportunities() {
 
-        given(service.findLatestEntries(any())).willReturn(
+        given(opportunitiesService.findByTimeframe(any())).willReturn(
                 Flux.just(Opportunity.of(
                         "BTCUSDT",
                         Timeframe.H1,
@@ -44,9 +53,42 @@ public class EngulfingEntriesControllerTest {
         );
 
         client.get()
-                .uri("/opentrade/crypto/engulfing/entries")
+                .uri("/tradetheday/crypto/opportunities/H1")
                 .exchange()
                 .expectStatus().is2xxSuccessful();
+
+        verify(opportunitiesService, times(1)).findByTimeframe(any());
+    }
+
+
+    @Test
+    void shouldTriggerSearchForMACrossovers() {
+
+        doNothing().when(krakenSearch).searchMACrossOver(any());
+        doNothing().when(krakenSearch).searchMACrossOver(any());
+
+        client.get()
+                .uri("/tradetheday/crypto/search/bullish/macrossover/H1")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        verify(krakenSearch, times(1)).searchMACrossOver(any());
+        verify(binanceSearch, times(1)).searchMACrossOver(any());
+    }
+
+    @Test
+    void shouldTriggerSearchForEngulfingCandles() {
+
+        doNothing().when(krakenSearch).searchEngulfingCandles(any());
+        doNothing().when(binanceSearch).searchEngulfingCandles(any());
+
+        client.get()
+                .uri("/tradetheday/crypto/search/bullish/engulfing/H1")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        verify(krakenSearch, times(1)).searchEngulfingCandles(any());
+        verify(binanceSearch, times(1)).searchEngulfingCandles(any());
     }
 }
 

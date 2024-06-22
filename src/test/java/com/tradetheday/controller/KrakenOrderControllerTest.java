@@ -30,7 +30,7 @@ public class KrakenOrderControllerTest {
                 Mono.just("SUCCESS"));
 
         client.post()
-                .uri("/opentrade/crypto/kraken/enter")
+                .uri("/tradetheday/crypto/kraken/enter")
                 .bodyValue(new KrakenMarketBuy("BTCUSD", 0.2))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
@@ -43,7 +43,7 @@ public class KrakenOrderControllerTest {
                 Mono.just("SUCCESS"));
 
         client.post()
-                .uri("/opentrade/crypto/kraken/stop")
+                .uri("/tradetheday/crypto/kraken/stop")
                 .bodyValue(new KrakenStopLoss("BTCUSD", 0.2, 30000.0))
                 .exchange()
                 .expectStatus().is2xxSuccessful();

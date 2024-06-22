@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("opentrade/crypto")
+@RequestMapping("tradetheday/crypto")
 public class KrakenOrderController {
 
     private final KrakenOrderService orderService;
