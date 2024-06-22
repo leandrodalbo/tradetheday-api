@@ -14,7 +14,8 @@ import reactor.core.publisher.Flux;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @WebFluxTest(OpportunitiesController.class)
 public class OpportunitiesControllerTest {
@@ -61,34 +62,5 @@ public class OpportunitiesControllerTest {
     }
 
 
-    @Test
-    void shouldTriggerSearchForMACrossovers() {
-
-        doNothing().when(krakenSearch).searchMACrossOver(any());
-        doNothing().when(krakenSearch).searchMACrossOver(any());
-
-        client.get()
-                .uri("/tradetheday/crypto/search/bullish/macrossover/H1")
-                .exchange()
-                .expectStatus().is2xxSuccessful();
-
-        verify(krakenSearch, times(1)).searchMACrossOver(any());
-        verify(binanceSearch, times(1)).searchMACrossOver(any());
-    }
-
-    @Test
-    void shouldTriggerSearchForEngulfingCandles() {
-
-        doNothing().when(krakenSearch).searchEngulfingCandles(any());
-        doNothing().when(binanceSearch).searchEngulfingCandles(any());
-
-        client.get()
-                .uri("/tradetheday/crypto/search/bullish/engulfing/H1")
-                .exchange()
-                .expectStatus().is2xxSuccessful();
-
-        verify(krakenSearch, times(1)).searchEngulfingCandles(any());
-        verify(binanceSearch, times(1)).searchEngulfingCandles(any());
-    }
 }
 

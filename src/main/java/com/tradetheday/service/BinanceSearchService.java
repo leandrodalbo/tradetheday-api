@@ -32,7 +32,6 @@ public class BinanceSearchService implements OpportunitiesSearch {
     }
 
     @Override
-    @Transactional
     public void searchEngulfingCandles(Timeframe tf) {
         this.props.symbols().forEach(symbol ->
                 binanceCall.engulfingCandles(symbol, tf)
@@ -42,7 +41,6 @@ public class BinanceSearchService implements OpportunitiesSearch {
     }
 
     @Override
-    @Transactional
     public void searchMACrossOver(Timeframe tf) {
         this.props.symbols().forEach(symbol ->
                 binanceCall.MACandles(symbol, tf, props.longMA())
@@ -52,6 +50,7 @@ public class BinanceSearchService implements OpportunitiesSearch {
     }
 
 
+    @Transactional
     private void saveInfo(String symbol, Candle latestCandle, Timeframe speed, boolean isEngulfing, boolean isMAcrossOver) {
         repository.findById(Opportunity.generateSimbolSpeed(symbol, speed))
                 .defaultIfEmpty(

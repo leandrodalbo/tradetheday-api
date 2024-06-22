@@ -32,7 +32,6 @@ public class KrakenSearchService implements OpportunitiesSearch {
     }
 
     @Override
-    @Transactional
     public void searchEngulfingCandles(Timeframe tf) {
         this.props.symbols().forEach(symbol ->
                 krakenCall.engulfingCandles(symbol, tf)
@@ -42,7 +41,6 @@ public class KrakenSearchService implements OpportunitiesSearch {
     }
 
     @Override
-    @Transactional
     public void searchMACrossOver(Timeframe tf) {
         this.props.symbols().forEach(symbol ->
                 krakenCall.MACandles(symbol, tf, props.longMA())
@@ -51,7 +49,7 @@ public class KrakenSearchService implements OpportunitiesSearch {
         );
     }
 
-
+    @Transactional
     private void saveInfo(String symbol, Candle latestCandle, Timeframe speed, boolean isEngulfing, boolean isMACrossover) {
         repository.findById(Opportunity.generateSimbolSpeed(symbol, speed))
                 .defaultIfEmpty(Opportunity.of(
