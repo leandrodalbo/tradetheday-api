@@ -12,6 +12,8 @@ binance:
   binance-uri: https://api.binance.com
   profit: 1.02
   stop: 0.98
+  shortMA: 9
+  longMA: 21
   symbols:
     - BTCUSDT
     - SOLUSDT
@@ -46,6 +48,8 @@ kraken:
   api-secret:
   profit: 1.02
   stop: 0.98
+  shortMA: 9
+  longMA: 21
   symbols:
     - SOLUSDT
     - MATICUSD
