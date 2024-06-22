@@ -15,8 +15,7 @@ import java.time.Instant;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @WebFluxTest(OpportunitiesController.class)
 public class OpportunitiesControllerTest {
@@ -33,6 +32,63 @@ public class OpportunitiesControllerTest {
     @Autowired
     WebTestClient client;
 
+
+    @Test
+    void shouldSearchNewBinanceEngulfingCandles() {
+
+        doNothing().when(binanceSearch).searchEngulfingCandles(any());
+
+
+        client.get()
+                .uri("/tradetheday/crypto/search/binance/engulfing")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        verify(binanceSearch, times(3)).searchEngulfingCandles(any());
+    }
+
+    @Test
+    void shouldSearchNewKrakenEngulfingCandles() {
+
+        doNothing().when(krakenSearch).searchEngulfingCandles(any());
+
+
+        client.get()
+                .uri("/tradetheday/crypto/search/kraken/engulfing")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        verify(krakenSearch, times(3)).searchEngulfingCandles(any());
+    }
+
+
+    @Test
+    void shouldSearchNewBinanceMAS() {
+
+        doNothing().when(binanceSearch).searchMACrossOver(any());
+
+
+        client.get()
+                .uri("/tradetheday/crypto/search/binance/ma")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        verify(binanceSearch, times(3)).searchMACrossOver(any());
+    }
+
+    @Test
+    void shouldSearchNewKrakenMAs() {
+
+        doNothing().when(krakenSearch).searchMACrossOver(any());
+
+
+        client.get()
+                .uri("/tradetheday/crypto/search/kraken/ma")
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        verify(krakenSearch, times(3)).searchMACrossOver(any());
+    }
 
     @Test
     void shouldGETSavedOpportunities() {

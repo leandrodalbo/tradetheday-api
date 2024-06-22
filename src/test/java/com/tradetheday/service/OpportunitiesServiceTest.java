@@ -70,7 +70,7 @@ public class OpportunitiesServiceTest {
         Flux<Opportunity> result = service.findByTimeframe(Timeframe.H1);
 
         StepVerifier.create(result)
-                .thenConsumeWhile(it -> it.binanceengulfingtime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond());
+                .thenConsumeWhile(it -> it.opportunityid().contains(Timeframe.H1.toString()) && it.binanceengulfingtime() > Instant.now().minus(1, ChronoUnit.HOURS).getEpochSecond());
 
         verify(repository, times(1)).findAll();
     }

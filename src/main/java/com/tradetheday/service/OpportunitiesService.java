@@ -22,9 +22,10 @@ public class OpportunitiesService {
         long time = Instant.now().minus(2, ChronoUnit.HOURS).getEpochSecond();
         return repository.findAll()
                 .filter(it ->
-                        it.binanceengulfingtime() >= time ||
-                                it.binancematime() >= time ||
-                                it.krakenengulfingtime() >= time ||
-                                it.krakenmatime() >= time);
+                        it.opportunityid().contains(timeframe.toString()) &&
+                                (it.binanceengulfingtime() >= time ||
+                                        it.binancematime() >= time ||
+                                        it.krakenengulfingtime() >= time ||
+                                        it.krakenmatime() >= time));
     }
 }
