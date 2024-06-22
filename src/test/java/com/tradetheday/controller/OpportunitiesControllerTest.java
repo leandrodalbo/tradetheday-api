@@ -10,9 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@WebFluxTest(EngulfingEntriesController.class)
+@WebFluxTest(OpportunitiesController.class)
 public class EngulfingEntriesControllerTest {
 
     @MockBean
@@ -25,7 +26,7 @@ public class EngulfingEntriesControllerTest {
     @Test
     void shouldGETEntries() {
 
-        given(service.findLatestEntries()).willReturn(
+        given(service.findLatestEntries(any())).willReturn(
                 Flux.just(Opportunity.of(
                         "BTCUSDT",
                         Timeframe.H1,
