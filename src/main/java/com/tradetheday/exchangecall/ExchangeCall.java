@@ -23,7 +23,7 @@ public abstract class ExchangeCall {
         Candle[] result = new Candle[values.size()];
 
         for (int i = 0; i < values.size(); i++) {
-            List candle = (List) values.get(0);
+            List candle = (List) values.get(i);
 
             result[i] = Candle.of(
                     Float.parseFloat((String) candle.get(1)),

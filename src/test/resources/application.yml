@@ -14,7 +14,7 @@ binance:
   stop: 0.98
   shortMA: 9
   longMA: 21
-  extra-candles: 11
+  extra-candles: 15
   symbols:
     - BTCUSDT
     - SOLUSDT
@@ -51,7 +51,7 @@ kraken:
   stop: 0.98
   shortMA: 9
   longMA: 21
-  extra-candles: 11
+  extra-candles: 15
   symbols:
     - SOLUSDT
     - MATICUSD

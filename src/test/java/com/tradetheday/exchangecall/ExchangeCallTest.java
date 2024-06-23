@@ -12,29 +12,32 @@ public class ExchangeCallTest {
 
     @Test
     void willReturnAnArrayOfThreeCandles() {
-        List<Object> data = List.of(
+        List<Object> c0 = List.of(
                 String.valueOf(Instant.now().getEpochSecond()),
                 "23.0",
-                "23.0",
-                "23.0",
-                "23.0"
+                "24.0",
+                "25.0",
+                "26.0"
         );
 
-        assertThat(ExchangeCall.toCandlesArray(List.of(data, data, data)))
+        List<Object> c1 = List.of(
+                String.valueOf(Instant.now().getEpochSecond()),
+                "27.0",
+                "28.0",
+                "29.0",
+                "30.0"
+        );
+        assertThat(ExchangeCall.toCandlesArray(List.of(c0, c1)))
                 .isEqualTo(
                         new Candle[]{
                                 Candle.of(23.0f,
-                                        23.0f,
-                                        23.0f,
-                                        23.0f),
-                                Candle.of(23.0f,
-                                        23.0f,
-                                        23.0f,
-                                        23.0f),
-                                Candle.of(23.0f,
-                                        23.0f,
-                                        23.0f,
-                                        23.0f)
+                                        24.0f,
+                                        25.0f,
+                                        26.0f),
+                                Candle.of(27.0f,
+                                        28.0f,
+                                        29.0f,
+                                        30.0f)
                         }
                 );
     }

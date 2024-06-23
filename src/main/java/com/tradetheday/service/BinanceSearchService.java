@@ -49,7 +49,7 @@ public class BinanceSearchService extends OpportunitiesSearch {
     public void searchMACrossOver(Timeframe tf) {
         this.props.symbols().forEach(symbol ->
                 binanceCall.MACandles(symbol, tf, props.longMA() + props.extraCandles())
-                        .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA())))
+                        .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA(), props.extraCandles())))
                         .subscribe(it -> saveInfo(new SavingData(
                                 symbol,
                                 tf,

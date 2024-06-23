@@ -21,7 +21,7 @@ binance:
   binance-uri: https://api.binance.com
   shortMA: 9
   longMA: 21
-  extra-candles: 11
+  extra-candles: 15
   profit: 1.02
   stop: 0.98
   symbols:
@@ -58,7 +58,7 @@ kraken:
   api-secret:
   shortMA: 9
   longMA: 21
-  extra-candles: 11
+  extra-candles: 15
   profit: 1.04
   stop: 0.98
   symbols:
