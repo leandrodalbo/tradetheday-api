@@ -12,6 +12,7 @@ public record KrakenProps(String apiUri,
                           Float stop,
                           Set<String> symbols,
                           Integer shortMA,
-                          Integer longMA
+                          Integer longMA,
+                          Integer extraCandles
 ) {
 }

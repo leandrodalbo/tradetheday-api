@@ -10,5 +10,7 @@ public record BinanceProps(String binanceUri,
                            Float stop,
                            Set<String> symbols,
                            Integer shortMA,
-                           Integer longMA) {
+                           Integer longMA,
+                           Integer extraCandles
+) {
 }

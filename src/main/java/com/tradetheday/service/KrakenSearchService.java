@@ -50,7 +50,7 @@ public class KrakenSearchService extends OpportunitiesSearch {
     @Override
     public void searchMACrossOver(Timeframe tf) {
         this.props.symbols().forEach(symbol ->
-                krakenCall.MACandles(symbol, tf, props.longMA())
+                krakenCall.MACandles(symbol, tf, props.longMA() + props.extraCandles())
                         .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA())))
                         .subscribe(it -> saveInfo(new SavingData(
                                 symbol,

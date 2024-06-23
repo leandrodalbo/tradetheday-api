@@ -34,5 +34,9 @@ public class EngulfingCandleStrategyTest {
         assertThat(strategy.isOn(new Candle[2])).isFalse();
     }
 
+    @Test
+    void shouldBeFalseForAnEmptyArray() {
+        assertThat(strategy.isOn(new Candle[0])).isFalse();
+    }
 
 }

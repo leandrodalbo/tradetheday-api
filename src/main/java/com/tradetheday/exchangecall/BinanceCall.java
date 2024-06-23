@@ -45,7 +45,7 @@ public class BinanceCall extends ExchangeCall {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToMono(List.class)
-                .map(ExchangeCall::engulfingToArray)
+                .map(ExchangeCall::toCandlesArray)
                 .doOnError(e -> logger.info(e.getMessage()));
     }
 

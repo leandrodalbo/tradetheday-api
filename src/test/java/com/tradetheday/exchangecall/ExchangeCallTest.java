@@ -20,7 +20,7 @@ public class ExchangeCallTest {
                 "23.0"
         );
 
-        assertThat(ExchangeCall.engulfingToArray(List.of(data, data, data)))
+        assertThat(ExchangeCall.toCandlesArray(List.of(data, data, data)))
                 .isEqualTo(
                         new Candle[]{
                                 Candle.of(23.0f,
@@ -41,7 +41,7 @@ public class ExchangeCallTest {
 
     @Test
     void willReturnAndArrayOfNullValues() {
-        assertThat(ExchangeCall.engulfingToArray(null)).isEqualTo(new Candle[]{null, null, null});
-        assertThat(ExchangeCall.engulfingToArray(List.of())).isEqualTo(new Candle[]{null, null, null});
+        assertThat(ExchangeCall.toCandlesArray(null)).isEqualTo(new Candle[0]);
+        assertThat(ExchangeCall.toCandlesArray(List.of())).isEqualTo(new Candle[0]);
     }
 }

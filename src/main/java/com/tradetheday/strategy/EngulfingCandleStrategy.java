@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EngulfingCandleStrategy implements Strategy<Candle[]> {
     public Boolean isOn(Candle[] candles) {
-        if (candles[0] == null || candles[1] == null || candles[2] == null)
+        if (candles.length == 0 || candles[0] == null || candles[1] == null || candles[2] == null)
             return false;
 
         Candle preprev = candles[0];

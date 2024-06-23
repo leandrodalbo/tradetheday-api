@@ -15,33 +15,23 @@ public abstract class ExchangeCall {
         this.client = client;
     }
 
-    public static Candle[] engulfingToArray(List values) {
-        Candle[] result = new Candle[3];
+    public static Candle[] toCandlesArray(List values) {
+        if (values == null) {
+            return new Candle[0];
+        }
 
-        if (values == null || values.size() < 3)
-            return result;
+        Candle[] result = new Candle[values.size()];
 
-        List valuesC0 = (List) values.get(0);
-        List valuesC1 = (List) values.get(1);
-        List valuesC2 = (List) values.get(2);
+        for (int i = 0; i < values.size(); i++) {
+            List candle = (List) values.get(0);
 
-        result[0] = Candle.of(
-                Float.parseFloat((String) valuesC0.get(1)),
-                Float.parseFloat((String) valuesC0.get(2)),
-                Float.parseFloat((String) valuesC0.get(3)),
-                Float.parseFloat((String) valuesC0.get(4)));
+            result[i] = Candle.of(
+                    Float.parseFloat((String) candle.get(1)),
+                    Float.parseFloat((String) candle.get(2)),
+                    Float.parseFloat((String) candle.get(3)),
+                    Float.parseFloat((String) candle.get(4)));
 
-        result[1] = Candle.of(
-                Float.parseFloat((String) valuesC1.get(1)),
-                Float.parseFloat((String) valuesC1.get(2)),
-                Float.parseFloat((String) valuesC1.get(3)),
-                Float.parseFloat((String) valuesC1.get(4)));
-
-        result[2] = Candle.of(
-                Float.parseFloat((String) valuesC2.get(1)),
-                Float.parseFloat((String) valuesC2.get(2)),
-                Float.parseFloat((String) valuesC2.get(3)),
-                Float.parseFloat((String) valuesC2.get(4)));
+        }
 
         return result;
     }

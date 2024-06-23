@@ -103,7 +103,7 @@ public class KrakenCall extends ExchangeCall {
                     }
 
                     Map data = (Map) it.result();
-                    return engulfingToArray((List) data.get(symbol));
+                    return toCandlesArray((List) data.get(symbol));
 
                 })
                 .doOnError(e -> logger.info(e.getMessage()));

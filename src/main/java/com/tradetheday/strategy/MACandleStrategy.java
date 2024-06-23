@@ -9,25 +9,50 @@ public class MACandleStrategy implements Strategy<MACandleStrategy.MAStrategyDat
 
     @Override
     public Boolean isOn(MAStrategyData data) {
-        double shortSum = 0;
-        double longSum = 0;
-        int shortPeriod = data.shortPeriod;
-        int longPeriod = data.longPeriod;
+        int i = data.candles.length - 1;
+        int backward = 5;
+        int last = i - backward;
 
-        for (int i = data.candles.length - 1; i >= 0; i--) {
-            if (shortPeriod > 0) {
-                shortSum += data.candles[i].close();
+        boolean flag = false;
+
+        while (i >= last) {
+            double longSum = 0;
+            double shortSum = 0;
+
+            int longCount = 0;
+            int shortCount = 0;
+
+            int lIndex = i;
+            int sIndex = i;
+
+            while (lIndex >= 0 && longCount < data.longPeriod) {
+                longSum += data.candles[lIndex].close();
+                longCount++;
+                lIndex--;
             }
 
-            if (longPeriod > 0) {
-                longSum += data.candles[i].close();
+
+            while (sIndex >= 0 && shortCount < data.shortPeriod) {
+                shortSum += data.candles[sIndex].close();
+                shortCount++;
+                sIndex--;
             }
 
-            shortPeriod--;
-            longPeriod--;
+            if (((shortSum / data.shortPeriod()) > (longSum / data.longPeriod())) &&
+                    (i == (data.candles.length - 1))) {
+                flag = true;
+            }
+
+            if (flag && (shortSum / data.shortPeriod()) < (longSum / data.longPeriod())) {
+                return true;
+            }
+
+
+            i--;
         }
 
-        return ((shortSum / data.shortPeriod) > (longSum / data.longPeriod));
+
+        return false;
     }
 
 
