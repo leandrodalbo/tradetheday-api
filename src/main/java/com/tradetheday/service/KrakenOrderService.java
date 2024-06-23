@@ -75,9 +75,9 @@ public class KrakenOrderService {
         Map<String, String> params = new HashMap<>();
 
         params.put("nonce", nonce);
-        params.put("ordertype", orderType.name().toLowerCase());
+        params.put("ordertype", orderType.getOrdertype());
         params.put("pair", symbol);
-        params.put("type", buySell.name().toLowerCase());
+        params.put("type", buySell.getBuysell());
         params.put("volume", String.valueOf(volume));
 
         price.ifPresent(value -> params.put("price", String.valueOf(value)));

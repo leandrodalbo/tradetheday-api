@@ -9,4 +9,8 @@ public enum KrakenOrderType {
     KrakenOrderType(String ordertype) {
         this.ordertype = ordertype;
     }
+
+    public String getOrdertype() {
+        return ordertype;
+    }
 }

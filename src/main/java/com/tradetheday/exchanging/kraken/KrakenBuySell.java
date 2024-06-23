@@ -9,4 +9,8 @@ public enum KrakenBuySell {
     KrakenBuySell(String buysell) {
         this.buysell = buysell;
     }
+
+    public String getBuysell() {
+        return buysell;
+    }
 }
