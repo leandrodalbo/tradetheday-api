@@ -40,8 +40,8 @@ public class MACandleStrategyTest {
     }
 
     private Candle[] toCandlesArray(List values) {
-        if (values == null) {
-            return new Candle[0];
+        if (values == null || values.isEmpty()) {
+            fail("failed loading testing data");
         }
 
         Candle[] result = new Candle[values.size()];

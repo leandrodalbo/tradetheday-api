@@ -16,7 +16,7 @@ public abstract class ExchangeCall {
     }
 
     public static Candle[] toCandlesArray(List values) {
-        if (values == null) {
+        if (values == null || values.isEmpty()) {
             return new Candle[0];
         }
 
