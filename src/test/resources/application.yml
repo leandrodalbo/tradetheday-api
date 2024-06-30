@@ -4,7 +4,7 @@ spring:
   r2dbc:
     username: user
     password: password
-    url: r2dbc:postgresql://localhost:5432/opentrades
+    url: r2dbc:postgresql://localhost:5432/tradetheday
   sql:
     init:
       mode: always

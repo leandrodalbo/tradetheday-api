@@ -1,5 +1,11 @@
 server:
   port: 8181
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+
 springdoc:
   swagger-ui:
     enabled: true
@@ -12,9 +18,9 @@ spring:
   r2dbc:
     username: user
     password: password
-    url: r2dbc:postgresql://localhost:5432/opentrades
+    url: r2dbc:postgresql://localhost:5432/tradetheday
   flyway:
-    url: jdbc:postgresql://localhost:5432/opentrades
+    url: jdbc:postgresql://localhost:5432/tradetheday
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
 binance:
