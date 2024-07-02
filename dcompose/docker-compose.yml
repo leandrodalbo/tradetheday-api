@@ -5,7 +5,7 @@ services:
     depends_on:
       - fluent-bit
       - dbservice
-    image: tradetheday:0.0.1-SNAPSHOT
+    image: ghcr.io/leandrodalbo/tradetheday:latest
     container_name: "tradetheday"
     ports:
       - 8181:8181

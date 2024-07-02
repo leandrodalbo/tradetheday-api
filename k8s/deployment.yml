@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: tradetheday
-          image: "fill"
+          image: "ghcr.io/leandrodalbo/tradetheday:latest"
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -30,10 +30,22 @@ spec:
             - name: SPRING_R2DBC_USERNAME
               value: user
             - name: SPRING_R2DBC_PASSWORD
-            - value: password
+              value: password
             - name: SPRING_FLYWAY_URL
-            - value: jdbc:postgresql://tradeteday-postgres/tradetheday
+              value: jdbc:postgresql://tradeteday-postgres/tradetheday
             - name: SPRING_FLYWAY_USER
-            - value: user
+              value: user
             - name: SPRING_FLYWAY_PASSWORD
-            - value: password
+              value: password
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8181
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8181
+            initialDelaySeconds: 5
+            periodSeconds: 15
