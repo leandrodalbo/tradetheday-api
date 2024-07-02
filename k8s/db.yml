@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradeteday-postgres
+  labels:
+    db: tradeteday-postgres
+spec:
+  selector:
+    matchLabels:
+      db: tradeteday-postgres
+  template:
+    metadata:
+      labels:
+        db: tradeteday-postgres
+    spec:
+      containers:
+        - name: tradetedaydb
+          image: postgres:14.4
+          env:
+            - name: POSTGRES_USER
+              value: user
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_DB
+              value: tradetheday
+          resources:
+            requests:
+              cpu: 100m
+              memory: 60Mi
+            limits:
+              cpu: 200m
+              memory: 120Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tradeteday-postgres
+  labels:
+    db: tradeteday-postgres
+spec:
+  type: ClusterIP
+  selector:
+    db: tradeteday-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

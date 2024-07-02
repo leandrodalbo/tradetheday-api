@@ -3,6 +3,11 @@ server:
 
 management:
   endpoint:
+    web:
+      exposure:
+        include: health
+    health:
+      probes: true
     metrics:
       enabled: true
 

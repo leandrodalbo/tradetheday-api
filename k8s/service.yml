@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tradetheday
+  labels:
+    app: tradetheday
+spec:
+  type: ClusterIP
+  selector:
+    app: tradetheday
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8181

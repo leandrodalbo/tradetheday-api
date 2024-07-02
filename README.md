@@ -33,3 +33,55 @@ $ docker-compose -f ./dcompose/docker-compose.yml up
 ### Observability
 Prometheus: http://localhost:9090/
 Grafana: http://localhost:3000/explore
+
+
+### k8s
+
+## create/start/stop a cluster
+
+```bash
+$ minikube start --cpus 2 --memory 4g --driver docker --profile tradetheday
+$ minikube stop --profile tradetheday
+$ minikube start --profile tradetheday
+```
+
+## setup the context
+
+```bash
+$ kubectl config get-contexts
+$ kubectl config current-context
+$ kubectl config use-context tradetheday
+```
+
+## list all nodes
+
+```bash
+$ kubectl get nodes
+```
+
+## create postgres pod
+
+```bash
+$ kubectl apply -f ./k8s/db.yml
+$ kubectl get pod
+```
+
+# create deployment
+
+```bash
+$ kubectl apply -f ./k8s/deployment.yml
+$ kubectl get deployments
+```
+
+# create service
+
+```bash
+$ kubectl apply -f ./k8s/service.yml
+$ kubectl get services
+```
+
+# expose
+
+```bash
+$ kubectl port-forward service/catalog-service 8181:80
+$ curl http://127.0.0.1:8181/actuator/health/liveness

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradetheday
+  labels:
+    app: tradetheday
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tradetheday
+  template:
+    metadata:
+      labels:
+        app: tradetheday
+    spec:
+      containers:
+        - name: tradetheday
+          image: "fill"
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 5" ]
+          ports:
+            - containerPort: 8181
+          env:
+            - name: SPRING_R2DBC_URL
+              value: r2dbc:postgresql://tradeteday-postgres/tradetheday
+            - name: SPRING_R2DBC_USERNAME
+              value: user
+            - name: SPRING_R2DBC_PASSWORD
+            - value: password
+            - name: SPRING_FLYWAY_URL
+            - value: jdbc:postgresql://tradeteday-postgres/tradetheday
+            - name: SPRING_FLYWAY_USER
+            - value: user
+            - name: SPRING_FLYWAY_PASSWORD
+            - value: password
