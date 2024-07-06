@@ -129,14 +129,35 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
-        Mono<String> result = service.setStopLoss(new KrakenStopLoss(
+        Mono<String> result = service.setStopLoss(new KrakenConditionalOrderData(
                 "SOLUSD",
                 23.2,
                 55.0
         ));
 
         StepVerifier.create(result)
-                .thenConsumeWhile("Stop Loss completed"::equals);
+                .thenConsumeWhile("Stop-Loss order completed"::equals);
+
+        verify(krakenCall, times(1)).postOrder(any());
+    }
+
+    @Test
+    void ShouldSetTakeProfit() {
+        when(props.apiKey()).thenReturn("aber23v");
+        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.symbols()).thenReturn(Set.of("SOLUSD"));
+
+
+        when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
+
+        Mono<String> result = service.setTakeProfit(new KrakenConditionalOrderData(
+                "SOLUSD",
+                23.2,
+                55.0
+        ));
+
+        StepVerifier.create(result)
+                .thenConsumeWhile("Take-Profit order completed"::equals);
 
         verify(krakenCall, times(1)).postOrder(any());
     }
@@ -145,7 +166,7 @@ public class KrakenOrderServiceTest {
     void WillValidateStopKrakenSymbolPair() {
         when(props.symbols()).thenReturn(Set.of("XRPUSDT"));
 
-        Mono<String> result = service.setStopLoss(new KrakenStopLoss(
+        Mono<String> result = service.setStopLoss(new KrakenConditionalOrderData(
                 "SOLUSDT",
                 23.2,
                 55.0
@@ -166,7 +187,7 @@ public class KrakenOrderServiceTest {
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));
 
-        Mono<String> result = service.setStopLoss(new KrakenStopLoss(
+        Mono<String> result = service.setStopLoss(new KrakenConditionalOrderData(
                 "SOLUSD",
                 23.2,
                 55.0

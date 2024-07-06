@@ -1,7 +1,7 @@
 package com.tradetheday.controller;
 
+import com.tradetheday.exchanging.kraken.KrakenConditionalOrderData;
 import com.tradetheday.exchanging.kraken.KrakenMarketBuy;
-import com.tradetheday.exchanging.kraken.KrakenStopLoss;
 import com.tradetheday.service.KrakenOrderService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +25,14 @@ public class KrakenOrderController {
     }
 
     @PostMapping("/kraken/stop")
-    public Mono<String> setStop(@RequestBody KrakenStopLoss stopLoss) {
+    public Mono<String> setStop(@RequestBody KrakenConditionalOrderData stopLoss) {
         return orderService.setStopLoss(stopLoss);
     }
+
+    @PostMapping("/kraken/profit")
+    public Mono<String> setTakeProfit(@RequestBody KrakenConditionalOrderData takeProfit) {
+        return orderService.setStopLoss(takeProfit);
+    }
+
 
 }

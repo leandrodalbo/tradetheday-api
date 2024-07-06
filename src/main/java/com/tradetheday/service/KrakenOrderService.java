@@ -33,7 +33,7 @@ public class KrakenOrderService {
         this.krakenCall = krakenCall;
     }
 
-    public Mono<String> setStopLoss(KrakenStopLoss stop) {
+    public Mono<String> setStopLoss(KrakenConditionalOrderData stop) {
 
         if (!props.symbols().contains(stop.symbol())) {
             return Mono.just("Invalid Kraken symbol");
@@ -45,7 +45,25 @@ public class KrakenOrderService {
                             if (!it.success()) {
                                 return Mono.just(it.message());
                             } else {
-                                return Mono.just("Stop Loss completed");
+                                return Mono.just("Stop-Loss order completed");
+                            }
+                        }
+                );
+    }
+
+    public Mono<String> setTakeProfit(KrakenConditionalOrderData profit) {
+
+        if (!props.symbols().contains(profit.symbol())) {
+            return Mono.just("Invalid Kraken symbol");
+        }
+
+        return postOrder(profit.symbol(), profit.volume(), KrakenBuySell.SELL, KrakenOrderType.TAKE_PROFIT, Optional.of(profit.trigger()))
+                .flatMap(it ->
+                        {
+                            if (!it.success()) {
+                                return Mono.just(it.message());
+                            } else {
+                                return Mono.just("Take-Profit order completed");
                             }
                         }
                 );

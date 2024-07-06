@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -48,7 +47,8 @@ public class KrakenSearchServiceTest {
 
     @Test
     void shouldSearchAndUpdateEngulfingOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
         when(repository.findById(anyString())).thenReturn(Mono.just(
                 new Opportunity(
                         "BTCUSDT-H1",
@@ -79,9 +79,10 @@ public class KrakenSearchServiceTest {
         );
         when(engulfingStrategy.isOn(any())).thenReturn(true);
 
-        search.searchEngulfingCandles(Timeframe.H1);
+        search.searchEngulfingCandles("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(krakenCall, times(1)).engulfingCandles(any(), any());
@@ -89,7 +90,12 @@ public class KrakenSearchServiceTest {
 
     @Test
     void shouldSearchAndUpdateMACrossovers() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
+        when(props.extraCandles()).thenReturn(10);
+        when(props.longMA()).thenReturn(21);
+        when(props.shortMA()).thenReturn(9);
+
         when(repository.findById(anyString())).thenReturn(Mono.just(
                 new Opportunity(
                         "BTCUSDT-H1",
@@ -120,9 +126,13 @@ public class KrakenSearchServiceTest {
         );
         when(maStrategy.isOn(any())).thenReturn(true);
 
-        search.searchMACrossOver(Timeframe.H1);
+        search.searchMACrossOver("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
+        verify(props, times(1)).shortMA();
+        verify(props, times(2)).longMA();
+        verify(props, times(2)).extraCandles();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(krakenCall, times(1)).MACandles(any(), any(), anyInt());
@@ -131,7 +141,8 @@ public class KrakenSearchServiceTest {
 
     @Test
     void shouldSaveNewEngulfingOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
         when(repository.findById(anyString())).thenReturn(Mono.empty());
         when(repository.save(any())).thenReturn(Mono.empty());
         when(krakenCall.engulfingCandles(any(), any())).thenReturn(
@@ -143,9 +154,11 @@ public class KrakenSearchServiceTest {
         );
         when(engulfingStrategy.isOn(any())).thenReturn(true);
 
-        search.searchEngulfingCandles(Timeframe.H1);
+        search.searchEngulfingCandles("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
+
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(krakenCall, times(1)).engulfingCandles(any(), any());
@@ -153,7 +166,12 @@ public class KrakenSearchServiceTest {
 
     @Test
     void shouldSaveNewMAOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
+        when(props.extraCandles()).thenReturn(10);
+        when(props.longMA()).thenReturn(21);
+        when(props.shortMA()).thenReturn(9);
+
         when(repository.findById(anyString())).thenReturn(Mono.empty());
         when(repository.save(any())).thenReturn(Mono.empty());
         when(krakenCall.MACandles(any(), any(), anyInt())).thenReturn(
@@ -165,9 +183,13 @@ public class KrakenSearchServiceTest {
         );
         when(maStrategy.isOn(any())).thenReturn(true);
 
-        search.searchMACrossOver(Timeframe.H1);
+        search.searchMACrossOver("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
+        verify(props, times(1)).shortMA();
+        verify(props, times(2)).longMA();
+        verify(props, times(2)).extraCandles();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(krakenCall, times(1)).MACandles(any(), any(), anyInt());

@@ -32,36 +32,4 @@ public class OpportunitiesController {
         return opportunitiesService.findByTimeframe(timeframe);
     }
 
-    @GetMapping("/search/binance/ma")
-    public String SearchBinanceMAs() {
-        for (Timeframe tf : Timeframe.values())
-            binanceSearch.searchMACrossOver(tf);
-
-        return "searching-new-binance-ma-crossovers";
-    }
-
-    @GetMapping("/search/kraken/ma")
-    public String searchKrakenMAs() {
-        for (Timeframe tf : Timeframe.values())
-            krakenSearch.searchMACrossOver(tf);
-
-        return "searching-new-kraken-ma-crossovers";
-    }
-
-
-    @GetMapping("/search/binance/engulfing")
-    public String SearchBinanceEngulfingCandles() {
-        for (Timeframe tf : Timeframe.values())
-            binanceSearch.searchEngulfingCandles(tf);
-
-        return "searching-new-binance-engulfing-candles";
-    }
-
-    @GetMapping("/search/kraken/engulfing")
-    public String searchKrakenEngulfinCandles() {
-        for (Timeframe tf : Timeframe.values())
-            krakenSearch.searchEngulfingCandles(tf);
-
-        return "searching-new-kraken-engulfing-candles";
-    }
 }

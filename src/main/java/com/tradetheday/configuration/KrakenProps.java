@@ -14,5 +14,5 @@ public record KrakenProps(String apiUri,
                           Integer shortMA,
                           Integer longMA,
                           Integer extraCandles
-) {
+) implements ExchangeProps {
 }

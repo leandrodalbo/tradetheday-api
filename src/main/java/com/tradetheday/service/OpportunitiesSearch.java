@@ -1,5 +1,6 @@
 package com.tradetheday.service;
 
+import com.tradetheday.configuration.ExchangeProps;
 import com.tradetheday.model.Opportunity;
 import com.tradetheday.model.Timeframe;
 import com.tradetheday.repository.OpportunityRepository;
@@ -21,12 +22,12 @@ public abstract class OpportunitiesSearch {
         this.maStrategy = maStrategy;
     }
 
-    protected abstract void searchEngulfingCandles(Timeframe interval);
+    protected abstract void searchEngulfingCandles(String symbol, Timeframe interval, ExchangeProps props);
 
-    protected abstract void searchMACrossOver(Timeframe interval);
+    protected abstract void searchMACrossOver(String symbol, Timeframe interval, ExchangeProps props);
 
     @Transactional
-    protected void saveInfo(SavingData data) {
+    protected synchronized void saveInfo(SavingData data) {
         repository.findById(Opportunity.generateId(data.symbol, data.timeframe))
                 .defaultIfEmpty(
                         Opportunity.of(

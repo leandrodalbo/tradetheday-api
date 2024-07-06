@@ -46,7 +46,8 @@ public class BinanceSearchServiceTest {
 
     @Test
     void shouldSearchAndUpdateEngulfingOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
         when(repository.findById(anyString())).thenReturn(Mono.just(
                 new Opportunity(
                         "BTCUSDT-H1",
@@ -77,9 +78,10 @@ public class BinanceSearchServiceTest {
         );
         when(engulfingStrategy.isOn(any())).thenReturn(true);
 
-        search.searchEngulfingCandles(Timeframe.H1);
+        search.searchEngulfingCandles("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).engulfingCandles(any(), any());
@@ -87,7 +89,9 @@ public class BinanceSearchServiceTest {
 
     @Test
     void shouldSearchNewEngulfingOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
+
         when(repository.findById(anyString())).thenReturn(Mono.empty());
         when(repository.save(any())).thenReturn(Mono.empty());
         when(binanceCall.engulfingCandles(any(), any())).thenReturn(
@@ -99,9 +103,11 @@ public class BinanceSearchServiceTest {
         );
         when(engulfingStrategy.isOn(any())).thenReturn(true);
 
-        search.searchEngulfingCandles(Timeframe.H1);
+        search.searchEngulfingCandles("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
+
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).engulfingCandles(any(), any());
@@ -109,7 +115,12 @@ public class BinanceSearchServiceTest {
 
     @Test
     void shouldSearchNewMaOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
+        when(props.extraCandles()).thenReturn(10);
+        when(props.longMA()).thenReturn(21);
+        when(props.shortMA()).thenReturn(9);
+
         when(repository.findById(anyString())).thenReturn(Mono.empty());
         when(repository.save(any())).thenReturn(Mono.empty());
         when(binanceCall.MACandles(any(), any(), anyInt())).thenReturn(
@@ -121,9 +132,13 @@ public class BinanceSearchServiceTest {
         );
         when(maStrategy.isOn(any())).thenReturn(true);
 
-        search.searchMACrossOver(Timeframe.H1);
+        search.searchMACrossOver("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
+        verify(props, times(1)).shortMA();
+        verify(props, times(2)).longMA();
+        verify(props, times(2)).extraCandles();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).MACandles(any(), any(), anyInt());
@@ -132,7 +147,12 @@ public class BinanceSearchServiceTest {
 
     @Test
     void shouldSearchAndUpdateMAOpportunities() {
-        when(props.symbols()).thenReturn(Set.of("BTCUSDT"));
+        when(props.profit()).thenReturn(1.4f);
+        when(props.stop()).thenReturn(1.0f);
+        when(props.extraCandles()).thenReturn(10);
+        when(props.longMA()).thenReturn(21);
+        when(props.shortMA()).thenReturn(9);
+
         when(repository.findById(anyString())).thenReturn(Mono.just(
                 new Opportunity(
                         "BTCUSDT-H1",
@@ -163,9 +183,13 @@ public class BinanceSearchServiceTest {
         );
         when(maStrategy.isOn(any())).thenReturn(true);
 
-        search.searchMACrossOver(Timeframe.H1);
+        search.searchMACrossOver("BTCUSDT", Timeframe.H1, props);
 
-        verify(props, times(1)).symbols();
+        verify(props, times(1)).profit();
+        verify(props, times(1)).stop();
+        verify(props, times(1)).shortMA();
+        verify(props, times(2)).longMA();
+        verify(props, times(2)).extraCandles();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).MACandles(any(), any(), anyInt());

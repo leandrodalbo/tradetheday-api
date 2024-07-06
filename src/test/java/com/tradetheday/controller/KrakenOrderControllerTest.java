@@ -1,7 +1,7 @@
 package com.tradetheday.controller;
 
+import com.tradetheday.exchanging.kraken.KrakenConditionalOrderData;
 import com.tradetheday.exchanging.kraken.KrakenMarketBuy;
-import com.tradetheday.exchanging.kraken.KrakenStopLoss;
 import com.tradetheday.service.KrakenOrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,20 @@ public class KrakenOrderControllerTest {
 
         client.post()
                 .uri("/tradetheday/crypto/kraken/stop")
-                .bodyValue(new KrakenStopLoss("BTCUSD", 0.2, 30000.0))
+                .bodyValue(new KrakenConditionalOrderData("BTCUSD", 0.2, 30000.0))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+    }
+
+    @Test
+    void shouldSetTakeProfitForSymbol() {
+
+        given(service.setTakeProfit(any())).willReturn(
+                Mono.just("SUCCESS"));
+
+        client.post()
+                .uri("/tradetheday/crypto/kraken/profit")
+                .bodyValue(new KrakenConditionalOrderData("BTCUSD", 0.2, 30000.0))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
     }

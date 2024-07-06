@@ -29,7 +29,7 @@ spring:
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
 binance:
-  binance-uri: https://api.binance.com
+  api-uri: https://api.binance.com
   shortMA: 9
   longMA: 21
   extra-candles: 15

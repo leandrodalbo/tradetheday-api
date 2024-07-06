@@ -1,5 +1,6 @@
 package com.tradetheday.service;
 
+import com.tradetheday.configuration.ExchangeProps;
 import com.tradetheday.configuration.KrakenProps;
 import com.tradetheday.exchangecall.KrakenCall;
 import com.tradetheday.model.Timeframe;
@@ -15,55 +16,52 @@ import java.util.Optional;
 public class KrakenSearchService extends OpportunitiesSearch {
 
 
-    private final KrakenProps props;
     private final KrakenCall krakenCall;
 
 
-    public KrakenSearchService(OpportunityRepository repository, EngulfingCandleStrategy engulfingStrategy, MACandleStrategy maStrategy, KrakenProps props, KrakenCall krakenCall) {
+    public KrakenSearchService(OpportunityRepository repository, EngulfingCandleStrategy engulfingStrategy, MACandleStrategy maStrategy, KrakenCall krakenCall) {
         super(repository, engulfingStrategy, maStrategy);
-        this.props = props;
         this.krakenCall = krakenCall;
     }
 
     @Override
-    public void searchEngulfingCandles(Timeframe tf) {
-        this.props.symbols().forEach(symbol ->
-                krakenCall.engulfingCandles(symbol, tf)
-                        .filter(engulfingStrategy::isOn)
-                        .subscribe(it -> saveInfo(new SavingData(
-                                        symbol,
-                                        tf,
-                                        false,
-                                        true,
-                                        Optional.of(Boolean.TRUE),
-                                        Optional.of(Instant.now().getEpochSecond()),
-                                        Optional.empty(),
-                                        Optional.empty(),
-                                        Optional.of(it[it.length - 1].close()),
-                                        Optional.of(it[it.length - 1].close() * props.stop()),
-                                        Optional.of(it[it.length - 1].close() * props.profit())
-                                )
-                        ))
-        );
-    }
-
-    @Override
-    public void searchMACrossOver(Timeframe tf) {
-        this.props.symbols().forEach(symbol ->
-                krakenCall.MACandles(symbol, tf, props.longMA() + props.extraCandles())
-                        .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA(), props.extraCandles())))
-                        .subscribe(it -> saveInfo(new SavingData(
+    public void searchEngulfingCandles(String symbol, Timeframe tf, ExchangeProps props) {
+        krakenCall.engulfingCandles(symbol, tf)
+                .filter(engulfingStrategy::isOn)
+                .subscribe(it -> saveInfo(new SavingData(
                                 symbol,
                                 tf,
                                 false,
                                 true,
-                                Optional.empty(),
-                                Optional.empty(),
                                 Optional.of(Boolean.TRUE),
                                 Optional.of(Instant.now().getEpochSecond()),
+                                Optional.empty(),
+                                Optional.empty(),
                                 Optional.of(it[it.length - 1].close()),
                                 Optional.of(it[it.length - 1].close() * props.stop()),
                                 Optional.of(it[it.length - 1].close() * props.profit())
-                        ))));
+                        )
+                ));
+
+    }
+
+    @Override
+    public void searchMACrossOver(String symbol, Timeframe tf, ExchangeProps krakenProps) {
+        KrakenProps props = (KrakenProps) krakenProps;
+        krakenCall.MACandles(symbol, tf, props.longMA() + props.extraCandles())
+                .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA(), props.extraCandles())))
+                .subscribe(it -> saveInfo(new SavingData(
+                        symbol,
+                        tf,
+                        false,
+                        true,
+                        Optional.empty(),
+                        Optional.empty(),
+                        Optional.of(Boolean.TRUE),
+                        Optional.of(Instant.now().getEpochSecond()),
+                        Optional.of(it[it.length - 1].close()),
+                        Optional.of(it[it.length - 1].close() * props.stop()),
+                        Optional.of(it[it.length - 1].close() * props.profit())
+                )));
     }
 }

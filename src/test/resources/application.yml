@@ -9,7 +9,7 @@ spring:
     init:
       mode: always
 binance:
-  binance-uri: https://api.binance.com
+  api-uri: https://api.binance.com
   profit: 1.02
   stop: 0.98
   shortMA: 9
