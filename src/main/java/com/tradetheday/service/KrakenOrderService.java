@@ -2,7 +2,10 @@ package com.tradetheday.service;
 
 import com.tradetheday.configuration.KrakenProps;
 import com.tradetheday.exchangecall.KrakenCall;
+import com.tradetheday.messages.Messages;
 import com.tradetheday.exchanging.kraken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -24,6 +27,8 @@ public class KrakenOrderService {
     private static final String SHA_256 = "SHA-256";
     private static final String HMAC_SHA_512 = "HmacSHA512";
 
+    private final Logger logger = LoggerFactory.getLogger(KrakenOrderService.class);
+
 
     private final KrakenProps props;
     private final KrakenCall krakenCall;
@@ -34,58 +39,28 @@ public class KrakenOrderService {
     }
 
     public Mono<String> setStopLoss(KrakenConditionalOrderData stop) {
-
         if (!props.symbols().contains(stop.symbol())) {
-            return Mono.just("Invalid Kraken symbol");
+            return Mono.just(Messages.INVALID_KRAKEN_SYMBOL.getMessage());
         }
-
         return postOrder(stop.symbol(), stop.volume(), KrakenBuySell.SELL, KrakenOrderType.STOP_LOSS, Optional.of(stop.trigger()))
-                .flatMap(it ->
-                        {
-                            if (!it.success()) {
-                                return Mono.just(it.message());
-                            } else {
-                                return Mono.just("Stop-Loss order completed");
-                            }
-                        }
-                );
+                .flatMap(it -> Mono.just(it.message()));
     }
 
     public Mono<String> setTakeProfit(KrakenConditionalOrderData profit) {
-
         if (!props.symbols().contains(profit.symbol())) {
-            return Mono.just("Invalid Kraken symbol");
+            return Mono.just(Messages.INVALID_KRAKEN_SYMBOL.getMessage());
         }
-
         return postOrder(profit.symbol(), profit.volume(), KrakenBuySell.SELL, KrakenOrderType.TAKE_PROFIT, Optional.of(profit.trigger()))
-                .flatMap(it ->
-                        {
-                            if (!it.success()) {
-                                return Mono.just(it.message());
-                            } else {
-                                return Mono.just("Take-Profit order completed");
-                            }
-                        }
-                );
+                .flatMap(it -> Mono.just(it.message()));
     }
 
 
     public Mono<String> dareToEnter(KrakenMarketBuy trade) {
-
         if (!props.symbols().contains(trade.symbol())) {
-            return Mono.just("Invalid Kraken symbol");
+            return Mono.just(Messages.INVALID_KRAKEN_SYMBOL.getMessage());
         }
-
         return postOrder(trade.symbol(), trade.volume(), KrakenBuySell.BUY, KrakenOrderType.MARKET, Optional.empty())
-                .flatMap(it ->
-                        {
-                            if (!it.success()) {
-                                return Mono.just(it.message());
-                            } else {
-                                return Mono.just("Order Completed");
-                            }
-                        }
-                );
+                .flatMap(it -> Mono.just(it.message()));
     }
 
     public Mono<KrakenPostResult> postOrder(String symbol, double volume, KrakenBuySell buySell, KrakenOrderType orderType, Optional<Double> price) {
@@ -111,6 +86,7 @@ public class KrakenOrderService {
             ));
 
         } catch (Exception e) {
+            logger.info(e.getMessage());
             return Mono.just(new KrakenPostResult(false, e.getMessage()));
         }
     }

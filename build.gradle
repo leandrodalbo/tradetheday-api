@@ -30,6 +30,7 @@ dependencies {
     runtimeOnly 'org.postgresql:r2dbc-postgresql'
     runtimeOnly 'org.flywaydb:flyway-core'
     runtimeOnly 'org.springframework:spring-jdbc'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 

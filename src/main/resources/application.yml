@@ -5,11 +5,13 @@ management:
   endpoint:
     web:
       exposure:
-        include: health
+        include: health, prometheus
     health:
       probes: true
     metrics:
       enabled: true
+      tags:
+        application: tradetheday
 
 springdoc:
   swagger-ui:

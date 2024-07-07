@@ -5,6 +5,7 @@ import com.tradetheday.exchanging.Candle;
 import com.tradetheday.exchanging.kraken.KrakenOrderPost;
 import com.tradetheday.exchanging.kraken.KrakenPostResult;
 import com.tradetheday.exchanging.kraken.KrakenResponse;
+import com.tradetheday.messages.Messages;
 import com.tradetheday.model.Timeframe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class KrakenCall extends ExchangeCall {
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
                     if (it.error().length > 0) {
-                        logger.info(String.format("Kraken ticker call failed for symbol %s", symbol));
+                        logger.info(String.format("%s:%s", Messages.KRAKEN_FETCH_FAILED, symbol));
                     }
 
                     Map data = (Map) it.result();
@@ -74,12 +75,19 @@ public class KrakenCall extends ExchangeCall {
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(it -> {
+                    KrakenPostResult result = null;
                     Map response = it;
-                    if (!((List) response.get("error")).isEmpty()) {
-                        return new KrakenPostResult(false, "Kraken order failed");
-                    }
-                    return new KrakenPostResult(true, String.format("Kraken Order Created %s", orderPost.data()));
 
+                    List errors = (List) response.get("error");
+
+                    if (!errors.isEmpty()) {
+                        result = new KrakenPostResult(false, String.format("%s:%s", Messages.KRAKEN_ORDER_FAILED, errors.get(0).toString()));
+                    } else {
+                        result = new KrakenPostResult(true, String.format("%s:%s", Messages.KRAKEN_ORDER_SUCCESS, orderPost.data()));
+                    }
+
+                    logger.info(result.message());
+                    return result;
                 })
                 .doOnError(e -> logger.info(e.getMessage()));
     }
@@ -99,12 +107,11 @@ public class KrakenCall extends ExchangeCall {
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
                     if (it.error().length > 0) {
-                        logger.info(String.format("Kraken engulfing candles fetch for symbol: %s at speed %s", symbol, tf));
+                        logger.info(String.format("%s:%s", Messages.KRAKEN_FETCH_FAILED, symbol));
                     }
 
                     Map data = (Map) it.result();
                     return toCandlesArray((List) data.get(symbol));
-
                 })
                 .doOnError(e -> logger.info(e.getMessage()));
     }

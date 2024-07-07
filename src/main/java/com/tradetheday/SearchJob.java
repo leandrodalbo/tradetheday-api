@@ -2,6 +2,7 @@ package com.tradetheday;
 
 import com.tradetheday.configuration.BinanceProps;
 import com.tradetheday.configuration.KrakenProps;
+import com.tradetheday.messages.Messages;
 import com.tradetheday.model.Timeframe;
 import com.tradetheday.service.BinanceSearchService;
 import com.tradetheday.service.KrakenSearchService;
@@ -38,7 +39,7 @@ public class SearchJob {
                         findOnBinance(binanceSymbol, Timeframe.H4);
                         Thread.sleep(2000);
                         findOnBinance(binanceSymbol, Timeframe.D1);
-                        Thread.sleep(3000);
+                        Thread.sleep(1000);
 
                     } catch (Exception e) {
                         logger.info(e.getMessage());
@@ -54,7 +55,7 @@ public class SearchJob {
                         findOnKraken(krakenSymbol, Timeframe.H4);
                         Thread.sleep(2000);
                         findOnKraken(krakenSymbol, Timeframe.D1);
-                        Thread.sleep(3000);
+                        Thread.sleep(1000);
 
                     } catch (Exception e) {
                         logger.info(e.getMessage());
@@ -71,37 +72,26 @@ public class SearchJob {
 
         Thread engulfing = new Thread(() ->
                 krakenService.searchEngulfingCandles(symbol, timeframe, krakenProps));
-
-        logger.info(String.format("Searching Kraken Engulfing Candles: %s, %s", symbol, timeframe));
-        engulfing.start();
-        logger.info(String.format("Searching Kraken Engulfing Candles Finished: %s, %s", symbol, timeframe));
-
         Thread maCross = new Thread(() ->
                 krakenService.searchMACrossOver(symbol, timeframe, krakenProps));
 
-
-        logger.info(String.format("Searching Kraken MAs: %s, %s", symbol, timeframe));
+        engulfing.start();
         maCross.start();
-        logger.info(String.format("Searching Kraken MAs Finished: %s, %s", symbol, timeframe));
 
+        logger.info(String.format("%s:%s:%s:%s", "KRAKEN", symbol, timeframe, Messages.TRADE_ENTRY_SEARCH));
     }
 
     private void findOnBinance(String symbol, Timeframe timeframe) {
 
         Thread engulfing = new Thread(() ->
                 binanceService.searchEngulfingCandles(symbol, timeframe, binanceProps));
-
-        logger.info(String.format("Searching Binance Engulfing Candles: %s, %s", symbol, timeframe));
-        engulfing.start();
-        logger.info(String.format("Searching Binance Engulfing Candles Finished: %s, %s", symbol, timeframe));
-
         Thread maCross = new Thread(() ->
                 binanceService.searchMACrossOver(symbol, timeframe, binanceProps));
 
-
-        logger.info(String.format("Searching Binance MAs: %s, %s", symbol, timeframe));
+        engulfing.start();
         maCross.start();
-        logger.info(String.format("Searching Binance MAs Finished: %s, %s", symbol, timeframe));
+
+        logger.info(String.format("%s:%s:%s:%s", "BINANCE", symbol, timeframe, Messages.TRADE_ENTRY_SEARCH));
 
     }
 
