@@ -2,16 +2,26 @@ server:
   port: 8181
 
 management:
-  endpoint:
+  endpoints:
     web:
       exposure:
-        include: health, prometheus
+        include: configprops, env, flyway, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
     health:
-      probes: true
-    metrics:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  info:
+    env:
       enabled: true
-      tags:
-        application: tradetheday
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 springdoc:
   swagger-ui:
@@ -21,7 +31,7 @@ springdoc:
     path: /tradetheday/docs
 spring:
   application:
-    name: trade-signal
+    name: tradetheday
   r2dbc:
     username: user
     password: password

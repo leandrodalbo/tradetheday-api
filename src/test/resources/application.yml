@@ -1,6 +1,6 @@
 spring:
   application:
-    name: trade-signal
+    name: tradetheday
   r2dbc:
     username: user
     password: password
