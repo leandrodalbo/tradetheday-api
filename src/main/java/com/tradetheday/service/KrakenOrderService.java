@@ -105,8 +105,8 @@ public class KrakenOrderService {
         try {
 
             return krakenCall.postOrder(new KrakenOrderPost(
-                    props.apiKey(),
-                    signature(props.apiSecret(), data, nonce, ADD_ORDER_PATH),
+                    props.apikey(),
+                    signature(props.apisecret(), data, nonce, ADD_ORDER_PATH),
                     data
             ));
 

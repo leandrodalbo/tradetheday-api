@@ -9,12 +9,12 @@ spring:
     init:
       mode: always
 binance:
-  api-uri: https://api.binance.com
+  apiuri: https://api.binance.com
   profit: 1.02
   stop: 0.98
-  shortMA: 9
-  longMA: 21
-  extra-candles: 15
+  shortma: 9
+  longma: 21
+  extracandles: 15
   symbols:
     - BTCUSDT
     - SOLUSDT
@@ -44,14 +44,14 @@ binance:
     - BATUSDT
     - MANAUSDT
 kraken:
-  api-uri: https://api.kraken.com
-  api-key:
-  api-secret:
+  apiuri: https://api.kraken.com
+  apikey:
+  apisecret:
   profit: 1.02
   stop: 0.98
-  shortMA: 9
-  longMA: 21
-  extra-candles: 15
+  shortma: 9
+  longma: 21
+  extracandles: 15
   symbols:
     - SOLUSDT
     - MATICUSD

@@ -48,8 +48,8 @@ public class KrakenSearchService extends OpportunitiesSearch {
     @Override
     public void searchMACrossOver(String symbol, Timeframe tf, ExchangeProps krakenProps) {
         KrakenProps props = (KrakenProps) krakenProps;
-        krakenCall.MACandles(symbol, tf, props.longMA() + props.extraCandles())
-                .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA(), props.extraCandles())))
+        krakenCall.MACandles(symbol, tf, props.longma() + props.extracandles())
+                .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortma(), props.longma(), props.extracandles())))
                 .subscribe(it -> saveInfo(new SavingData(
                         symbol,
                         tf,

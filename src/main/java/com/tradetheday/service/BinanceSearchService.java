@@ -45,8 +45,8 @@ public class BinanceSearchService extends OpportunitiesSearch {
     @Override
     public void searchMACrossOver(String symbol, Timeframe tf, ExchangeProps binanceProps) {
         BinanceProps props = (BinanceProps) binanceProps;
-        binanceCall.MACandles(symbol, tf, props.longMA() + props.extraCandles())
-                .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortMA(), props.longMA(), props.extraCandles())))
+        binanceCall.MACandles(symbol, tf, props.longma() + props.extracandles())
+                .filter(it -> maStrategy.isOn(new MACandleStrategy.MAStrategyData(it, props.shortma(), props.longma(), props.extracandles())))
                 .subscribe(it -> saveInfo(new SavingData(
                         symbol,
                         tf,

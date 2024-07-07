@@ -29,10 +29,10 @@ spring:
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
 binance:
-  api-uri: https://api.binance.com
-  shortMA: 9
-  longMA: 21
-  extra-candles: 15
+  apiuri: https://api.binance.com
+  shortma: 9
+  longma: 21
+  extracandles: 15
   profit: 1.02
   stop: 0.98
   symbols:
@@ -64,12 +64,12 @@ binance:
     - SOLUSDT
     - BTCUSDT
 kraken:
-  api-uri: https://api.kraken.com
-  api-key:
-  api-secret:
-  shortMA: 9
-  longMA: 21
-  extra-candles: 15
+  apiuri: https://api.kraken.com
+  apikey:
+  apisecret:
+  shortma: 9
+  longma: 21
+  extracandles: 15
   profit: 1.04
   stop: 0.98
   symbols:

@@ -117,9 +117,9 @@ public class BinanceSearchServiceTest {
     void shouldSearchNewMaOpportunities() {
         when(props.profit()).thenReturn(1.4f);
         when(props.stop()).thenReturn(1.0f);
-        when(props.extraCandles()).thenReturn(10);
-        when(props.longMA()).thenReturn(21);
-        when(props.shortMA()).thenReturn(9);
+        when(props.extracandles()).thenReturn(10);
+        when(props.longma()).thenReturn(21);
+        when(props.shortma()).thenReturn(9);
 
         when(repository.findById(anyString())).thenReturn(Mono.empty());
         when(repository.save(any())).thenReturn(Mono.empty());
@@ -136,9 +136,9 @@ public class BinanceSearchServiceTest {
 
         verify(props, times(1)).profit();
         verify(props, times(1)).stop();
-        verify(props, times(1)).shortMA();
-        verify(props, times(2)).longMA();
-        verify(props, times(2)).extraCandles();
+        verify(props, times(1)).shortma();
+        verify(props, times(2)).longma();
+        verify(props, times(2)).extracandles();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).MACandles(any(), any(), anyInt());
@@ -149,9 +149,9 @@ public class BinanceSearchServiceTest {
     void shouldSearchAndUpdateMAOpportunities() {
         when(props.profit()).thenReturn(1.4f);
         when(props.stop()).thenReturn(1.0f);
-        when(props.extraCandles()).thenReturn(10);
-        when(props.longMA()).thenReturn(21);
-        when(props.shortMA()).thenReturn(9);
+        when(props.extracandles()).thenReturn(10);
+        when(props.longma()).thenReturn(21);
+        when(props.shortma()).thenReturn(9);
 
         when(repository.findById(anyString())).thenReturn(Mono.just(
                 new Opportunity(
@@ -187,9 +187,9 @@ public class BinanceSearchServiceTest {
 
         verify(props, times(1)).profit();
         verify(props, times(1)).stop();
-        verify(props, times(1)).shortMA();
-        verify(props, times(2)).longMA();
-        verify(props, times(2)).extraCandles();
+        verify(props, times(1)).shortma();
+        verify(props, times(2)).longma();
+        verify(props, times(2)).extracandles();
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyString());
         verify(binanceCall, times(1)).MACandles(any(), any(), anyInt());

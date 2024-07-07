@@ -17,10 +17,10 @@ public class WebClientProvider {
     }
 
     public WebClient binanceWebClient() {
-        return builder.baseUrl(binanceProps.apiUri()).build();
+        return builder.baseUrl(binanceProps.apiuri()).build();
     }
 
     public WebClient krakenWebClient() {
-        return builder.baseUrl(krakenProps.apiUri()).build();
+        return builder.baseUrl(krakenProps.apiuri()).build();
     }
 }

@@ -36,8 +36,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void willPostAMarketOrder() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
@@ -51,8 +51,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void willPostAStopLossOrder() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(true, "success")));
 
@@ -67,8 +67,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void ShouldDareToEnterTheMarket() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
         when(props.symbols()).thenReturn(Set.of("SOLUSD"));
 
 
@@ -102,8 +102,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void willGetAnErrorWhenItFailed() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
         when(props.symbols()).thenReturn(Set.of("SOLUSD"));
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));
@@ -122,8 +122,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void ShouldSetStopLoss() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
         when(props.symbols()).thenReturn(Set.of("SOLUSD"));
 
 
@@ -143,8 +143,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void ShouldSetTakeProfit() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
         when(props.symbols()).thenReturn(Set.of("SOLUSD"));
 
 
@@ -181,8 +181,8 @@ public class KrakenOrderServiceTest {
 
     @Test
     void willGetAnErrorWhenStopLossOrderFailed() {
-        when(props.apiKey()).thenReturn("aber23v");
-        when(props.apiSecret()).thenReturn("aber23v");
+        when(props.apikey()).thenReturn("aber23v");
+        when(props.apisecret()).thenReturn("aber23v");
         when(props.symbols()).thenReturn(Set.of("SOLUSD"));
 
         when(krakenCall.postOrder(any())).thenReturn(Mono.just(new KrakenPostResult(false, "no-success")));

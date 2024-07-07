@@ -16,6 +16,8 @@ services:
       - SPRING_FLYWAY_URL=jdbc:postgresql://tradethedaydb:5432/tradetheday
       - SPRING_FLYWAY_USER=user
       - SPRING_FLYWAY_PASSWORD=password
+      - KRAKEN_APIKEY=
+      - KRAKEN_APISECRET=
     logging:
       driver: fluentd
       options:

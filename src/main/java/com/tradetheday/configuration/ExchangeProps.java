@@ -3,7 +3,7 @@ package com.tradetheday.configuration;
 import java.util.Set;
 
 public interface ExchangeProps {
-    String apiUri();
+    String apiuri();
 
     Float stop();
 
