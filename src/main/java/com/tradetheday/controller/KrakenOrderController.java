@@ -31,7 +31,7 @@ public class KrakenOrderController {
 
     @PostMapping("/kraken/profit")
     public Mono<String> setTakeProfit(@RequestBody KrakenConditionalOrderData takeProfit) {
-        return orderService.setStopLoss(takeProfit);
+        return orderService.setTakeProfit(takeProfit);
     }
 
 

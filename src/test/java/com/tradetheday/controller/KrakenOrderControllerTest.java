@@ -12,6 +12,8 @@ import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @WebFluxTest(KrakenOrderController.class)
 public class KrakenOrderControllerTest {
@@ -47,6 +49,8 @@ public class KrakenOrderControllerTest {
                 .bodyValue(new KrakenConditionalOrderData("BTCUSD", 0.2, 30000.0))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
+
+        verify(service, times(1)).setStopLoss(any());
     }
 
     @Test
@@ -60,6 +64,8 @@ public class KrakenOrderControllerTest {
                 .bodyValue(new KrakenConditionalOrderData("BTCUSD", 0.2, 30000.0))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
+
+        verify(service, times(1)).setTakeProfit(any());
     }
 }
 
