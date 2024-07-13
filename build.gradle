@@ -31,7 +31,7 @@ dependencies {
     runtimeOnly 'org.flywaydb:flyway-core'
     runtimeOnly 'org.springframework:spring-jdbc'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    runtimeOnly 'io.opentelemetry.javaagent:opentelemetry-javaagent:2.4.0'
+    runtimeOnly 'io.opentelemetry.javaagent:opentelemetry-javaagent:1.33.3'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
