@@ -22,6 +22,9 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},trace_id: %X{trace_id}, span_id: %X{span_id}]"
 
 springdoc:
   swagger-ui:

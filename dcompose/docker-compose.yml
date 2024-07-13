@@ -5,6 +5,7 @@ services:
     depends_on:
       - fluent-bit
       - dbservice
+      - tempo
     image: ghcr.io/leandrodalbo/tradetheday:latest
     container_name: "tradetheday"
     ports:
@@ -16,6 +17,10 @@ services:
       - SPRING_FLYWAY_URL=jdbc:postgresql://tradethedaydb:5432/tradetheday
       - SPRING_FLYWAY_USER=user
       - SPRING_FLYWAY_PASSWORD=password
+      - JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/lib/opentelemetry-javaagent-1.17.0.jar
+      - OTEL_SERVICE_NAME=tradetheday
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - OTEL_METRICS_EXPORTER=none
       - KRAKEN_APIKEY=
       - KRAKEN_APISECRET=
     logging:
