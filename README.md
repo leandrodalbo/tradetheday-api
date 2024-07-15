@@ -4,7 +4,7 @@
 - The data is saved identifying possible trading opportunities.
 - Using Kraken API to open market/stop-loss/take-profit orders.
 - Strategies used: Engulfing candles and MA crossovers.
-- Notifications (TODO)
+
 
 
 ## API Documentation
