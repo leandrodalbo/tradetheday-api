@@ -86,7 +86,7 @@ public class KrakenOrderService {
             ));
 
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.error(e.getClass().getSimpleName());
             return Mono.just(new KrakenPostResult(false, e.getMessage()));
         }
     }

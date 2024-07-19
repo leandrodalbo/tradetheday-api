@@ -46,7 +46,7 @@ public class BinanceCall extends ExchangeCall {
                 .retrieve()
                 .bodyToMono(List.class)
                 .map(ExchangeCall::toCandlesArray)
-                .doOnError(e -> logger.info(e.getMessage()));
+                .doOnError(e -> logger.error(e.getClass().getSimpleName()));
     }
 
     private String interval(Timeframe speed) {

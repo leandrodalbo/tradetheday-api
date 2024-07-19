@@ -54,7 +54,7 @@ public class KrakenCall extends ExchangeCall {
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
                     if (it.error().length > 0) {
-                        logger.info(String.format("%s:%s", Messages.KRAKEN_FETCH_FAILED, symbol));
+                        logger.error(String.format("%s:%s", Messages.KRAKEN_FETCH_FAILED, symbol));
                     }
 
                     Map data = (Map) it.result();
@@ -62,7 +62,7 @@ public class KrakenCall extends ExchangeCall {
                     List info = (List) pairMap.get("c");
                     return Double.valueOf((String) info.get(0));
                 })
-                .doOnError(e -> logger.info(e.getMessage()));
+                .doOnError(e -> logger.error(e.getClass().getSimpleName()));
     }
 
     public Mono<KrakenPostResult> postOrder(KrakenOrderPost orderPost) {
@@ -89,7 +89,7 @@ public class KrakenCall extends ExchangeCall {
                     logger.info(result.message());
                     return result;
                 })
-                .doOnError(e -> logger.info(e.getMessage()));
+                .doOnError(e -> logger.error(e.getClass().getSimpleName()));
     }
 
     private Mono<Candle[]> fetchOHLC(String symbol, Timeframe tf, Optional<Integer> period) {
@@ -107,13 +107,13 @@ public class KrakenCall extends ExchangeCall {
                 .bodyToMono(KrakenResponse.class)
                 .map(it -> {
                     if (it.error().length > 0) {
-                        logger.info(String.format("%s:%s", Messages.KRAKEN_FETCH_FAILED, symbol));
+                        logger.error(String.format("%s:%s", Messages.KRAKEN_FETCH_FAILED, symbol));
                     }
 
                     Map data = (Map) it.result();
                     return toCandlesArray((List) data.get(symbol));
                 })
-                .doOnError(e -> logger.info(e.getMessage()));
+                .doOnError(e -> logger.error(e.getClass().getSimpleName()));
     }
 
     private long sinceParameter(Timeframe tf) {

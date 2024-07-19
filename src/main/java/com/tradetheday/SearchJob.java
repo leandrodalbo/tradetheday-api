@@ -42,7 +42,7 @@ public class SearchJob {
                         Thread.sleep(1000);
 
                     } catch (Exception e) {
-                        logger.info(e.getMessage());
+                        logger.error(e.getClass().getSimpleName());
                     }
                 }
         ));
@@ -58,7 +58,7 @@ public class SearchJob {
                         Thread.sleep(1000);
 
                     } catch (Exception e) {
-                        logger.info(e.getMessage());
+                        logger.error(e.getClass().getSimpleName());
                     }
                 }
         ));
